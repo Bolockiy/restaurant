@@ -10,20 +10,13 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>kitchen-service</artifactId>
+    <artifactId>common-dto</artifactId>
+    <packaging>jar</packaging>
 
     <properties>
         <maven.compiler.source>24</maven.compiler.source>
         <maven.compiler.target>24</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>ru.Liga</groupId>
-            <artifactId>common-dto</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-    </dependencies>
 
 </project>

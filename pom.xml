@@ -22,11 +22,11 @@
 		<developer/>
 	</developers>
     <modules>
+        <module>common-dto</module>
+        <module>waiter-service</module>
+        <module>kitchen-service</module>
         <module>restaurant-app</module>
-        <module>waiter-service</module>
-        <module>kitchen-service</module>
-        <module>waiter-service</module>
-        <module>kitchen-service</module>
+        <module>migrations</module>
     </modules>
     <scm>
 		<connection/>
