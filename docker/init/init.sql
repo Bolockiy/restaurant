@@ -1,6 +1,11 @@
+-- Create databases
 CREATE DATABASE kitchen_db;
 CREATE DATABASE waiter_db;
 
+-- =========================
+--  KITCHEN DB SETUP
+-- =========================
+\echo 'Creating schema and tables for kitchen_db...'
 \connect kitchen_db
 
 CREATE SCHEMA IF NOT EXISTS kitchen;
@@ -28,6 +33,10 @@ CREATE TABLE kitchen.order_to_dish (
     FOREIGN KEY (dish_id) REFERENCES kitchen.dish(dish_id)
 );
 
+-- =========================
+--  WAITER DB SETUP
+-- =========================
+\echo 'Creating schema and tables for waiter_db...'
 \connect waiter_db
 
 CREATE SCHEMA IF NOT EXISTS waiter;
