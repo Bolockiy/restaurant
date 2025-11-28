@@ -7,7 +7,7 @@ import ru.Liga.waiter.service.OrderService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/orders")
+@RequestMapping("/waiter/orders/")
 public class OrderController {
 
     private final OrderService service;

@@ -1,4 +1,4 @@
-package ru.Liga.model.entity.Waiter;
+package ru.Liga.waiter.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

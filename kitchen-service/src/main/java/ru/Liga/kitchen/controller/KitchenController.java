@@ -24,7 +24,6 @@ public class KitchenController {
 
     @PostMapping
     public String updateStatus(@RequestBody KitchenDto dto) {
-
         Long id = dto.getOrderId();
         String action = dto.getAction();
 

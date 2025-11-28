@@ -10,7 +10,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>hibernate</artifactId>
+    <artifactId>waiter-service</artifactId>
 
     <properties>
         <maven.compiler.source>24</maven.compiler.source>
@@ -19,11 +19,21 @@
     </properties>
 
     <dependencies>
+
+        <!-- DTO модуль -->
+        <dependency>
+            <groupId>ru.Liga</groupId>
+            <artifactId>common-dto</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <!-- Hibernate/JPA аннотации -->
         <dependency>
             <groupId>jakarta.persistence</groupId>
             <artifactId>jakarta.persistence-api</artifactId>
             <version>3.1.0</version>
         </dependency>
+
     </dependencies>
 
 </project>
