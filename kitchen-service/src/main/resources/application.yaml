@@ -2,6 +2,16 @@ spring:
   application:
     name: kitchen
 
+  datasource:
+    url: jdbc:postgresql://localhost:5435/kitchen_db
+    username: test
+    password: test
+    driver-class-name: org.postgresql.Driver
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+
 management:
   endpoints:
     web:
@@ -10,5 +20,6 @@ management:
   endpoint:
     health:
       show-details: ALWAYS
+
 server:
   port: 8082

@@ -7,9 +7,9 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
-public class OrderDto {
+public class DishDto {
     private Long id;
-    private String dish;
-    private String status;
+    private Long balance;
+    private String shortName;
+    private String composition;
 }

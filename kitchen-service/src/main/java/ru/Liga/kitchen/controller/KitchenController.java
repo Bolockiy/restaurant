@@ -1,37 +1,44 @@
-package ru.Liga.kitchen.controller;
-
-import org.springframework.web.bind.annotation.*;
-import ru.Liga.dto.KitchenDto;
-import ru.Liga.dto.OrderDto;
-import ru.Liga.kitchen.service.KitchenService;
-
-import java.util.List;
-
-@RestController
-@RequestMapping("/kitchen")
-public class KitchenController {
-
-    private final KitchenService service;
-
-    public KitchenController(KitchenService service) {
-        this.service = service;
-    }
-
-    @GetMapping("/orders")
-    public List<OrderDto> getAll() {
-        return service.getAll();
-    }
-
-    @PostMapping
-    public String updateStatus(@RequestBody KitchenDto dto) {
-        Long id = dto.getOrderId();
-        String action = dto.getAction();
-
-        return switch (action.toUpperCase()) {
-            case "ACCEPT" -> service.accept(id);
-            case "REJECT" -> service.reject(id);
-            case "READY"  -> service.ready(id);
-            default -> "Unknown action: " + action;
-        };
-    }
-}
+//package ru.Liga.kitchen.controller;
+//
+//import org.springframework.web.bind.annotation.*;
+//import ru.Liga.kitchen.entity.KitchenOrder;
+//import ru.Liga.kitchen.service.KitchenService;
+//
+//import java.util.List;
+//
+//@RestController
+//@RequestMapping("/kitchen/dishes")
+//public class KitchenController {
+//
+//    private final KitchenService kitchenService;
+//
+//    public KitchenController(KitchenService kitchenService) {
+//        this.kitchenService = kitchenService;
+//    }
+//
+//    @GetMapping("/{id}")
+//    public KitchenOrder getById(@PathVariable Long id) {
+//        return kitchenService.getById(id);
+//    }
+//
+//    @GetMapping
+//    public List<KitchenOrder> getAll() {
+//        return kitchenService.getAll();
+//    }
+//
+//    @PostMapping
+//    public void create(@RequestBody KitchenOrder kitchenOrder) {
+//        kitchenService.create(kitchenOrder);
+//    }
+//
+//    @PutMapping("/{id}")
+//    public void update(@PathVariable Long id, @RequestBody KitchenOrder kitchenOrder) {
+//        kitchenOrder.setKitchen_order_id(id);
+//        kitchenService.update(kitchenOrder);
+//    }
+//
+//    @DeleteMapping("/{id}")
+//    public void delete(@PathVariable Long id) {
+//        kitchenService.delete(id);
+//    }
+//}
