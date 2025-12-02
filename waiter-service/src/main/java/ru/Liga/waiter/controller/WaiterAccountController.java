@@ -1,5 +1,7 @@
 package ru.Liga.waiter.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.Liga.dto.WaiterAccountDto;
 import ru.Liga.waiter.service.WaiterAccountService;
@@ -9,22 +11,73 @@ import java.util.List;
 @RestController
 @RequestMapping("/waiter/accounts")
 public class WaiterAccountController {
+
     private final WaiterAccountService waiterService;
 
     public WaiterAccountController(WaiterAccountService waiterService) {
         this.waiterService = waiterService;
     }
 
-    // Создание нового аккаунта
+    // ------------------------------
+    // CREATE
+    // ------------------------------
     @PostMapping
-    public WaiterAccountDto createAccount(@RequestBody WaiterAccountDto dto) {
-        return waiterService.save(dto);
+    public ResponseEntity<WaiterAccountDto> createAccount(@RequestBody WaiterAccountDto dto) {
+        WaiterAccountDto saved = waiterService.save(dto);
+        return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
-    // Получение всех аккаунтов
+    // ------------------------------
+    // READ ALL
+    // ------------------------------
     @GetMapping("/all")
-    public List<WaiterAccountDto> findAll() {
-        return waiterService.findAll();
+    public ResponseEntity<List<WaiterAccountDto>> findAll() {
+        List<WaiterAccountDto> accounts = waiterService.findAll();
+        return ResponseEntity.ok(accounts);
     }
 
+    // ------------------------------
+    // READ ONE BY ID
+    // ------------------------------
+    @GetMapping("/{id}")
+    public ResponseEntity<WaiterAccountDto> findById(@PathVariable Long id) {
+        WaiterAccountDto dto = waiterService.findById(id);
+        if (dto == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(dto);
+    }
+
+    // ------------------------------
+    // UPDATE
+    // ------------------------------
+    @PutMapping("/{id}")
+    public ResponseEntity<WaiterAccountDto> update(@PathVariable Long id, @RequestBody WaiterAccountDto dto) {
+        WaiterAccountDto updated = waiterService.update(id, dto);
+        if (updated == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updated);
+    }
+
+    // ------------------------------
+    // DELETE
+    // ------------------------------
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        boolean deleted = waiterService.delete(id);
+        if (!deleted) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.noContent().build();
+    }
+
+    // ------------------------------
+    // READ BY NAME
+    // ------------------------------
+    @GetMapping("/search")
+    public ResponseEntity<List<WaiterAccountDto>> findByName(@RequestParam String name) {
+        List<WaiterAccountDto> accounts = waiterService.findByName(name);
+        return ResponseEntity.ok(accounts);
+    }
 }
