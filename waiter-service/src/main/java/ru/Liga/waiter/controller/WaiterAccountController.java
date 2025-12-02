@@ -7,40 +7,24 @@ import ru.Liga.waiter.service.WaiterAccountService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/waiter/accounts/")
-
+@RequestMapping("/waiter/accounts")
 public class WaiterAccountController {
-    private WaiterAccountService waiterService;
-    WaiterAccountController(WaiterAccountService waiterService)
-    {
-        waiterService = waiterService;
+    private final WaiterAccountService waiterService;
+
+    public WaiterAccountController(WaiterAccountService waiterService) {
+        this.waiterService = waiterService;
     }
 
+    // Создание нового аккаунта
     @PostMapping
-    public WaiterAccountDto createAccount(@RequestBody WaiterAccountDto dto)
-    {
-        return waiterService.save(dto);
-    }
-    @GetMapping("/{name}")
-    public WaiterAccountDto findAccountByName(@PathVariable String name)
-    {
-        return  waiterService.findAccountByName(name);
-    }
-    @PostMapping
-    public WaiterAccountDto updateAccount(@RequestBody WaiterAccountDto dto)
-    {
+    public WaiterAccountDto createAccount(@RequestBody WaiterAccountDto dto) {
         return waiterService.save(dto);
     }
 
+    // Получение всех аккаунтов
     @GetMapping("/all")
-    public List<WaiterAccountDto> findAll()
-    {
+    public List<WaiterAccountDto> findAll() {
         return waiterService.findAll();
     }
 
-    @DeleteMapping
-    public WaiterAccountDto deleteAccount(@RequestParam String name)
-    {
-        return waiterService.delete(name);
-    }
 }

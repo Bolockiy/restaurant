@@ -2,6 +2,20 @@ spring:
   application:
     name: waiter
 
+  datasource:
+    url: jdbc:postgresql://localhost:5435/waiter_db
+    username: test
+    password: test
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
 management:
   endpoints:
     web:
@@ -10,5 +24,6 @@ management:
   endpoint:
     health:
       show-details: ALWAYS
+
 server:
-  port: 8081
+  port: 8083

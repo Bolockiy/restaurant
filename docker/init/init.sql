@@ -6,14 +6,14 @@ CREATE DATABASE waiter_db;
 CREATE SCHEMA IF NOT EXISTS kitchen;
 
 CREATE TABLE kitchen.kitchen_order (
-    kitchen_order_id BIGINT PRIMARY KEY,
-    waiter_order_no BIGINT NOT NULL,
+    kitchen_order_id BIGSERIAL PRIMARY KEY,
+    waiter_order_no BIGSERIAL NOT NULL,
     status VARCHAR NOT NULL,
     create_dttm TIMESTAMPTZ NOT NULL
 );
 
 CREATE TABLE kitchen.dish (
-    dish_id BIGINT PRIMARY KEY,
+    dish_id BIGSERIAL PRIMARY KEY,
     balance BIGINT NOT NULL,
     short_name VARCHAR NOT NULL,
     dish_composition VARCHAR NOT NULL
@@ -34,14 +34,14 @@ CREATE TABLE kitchen.order_to_dish (
 CREATE SCHEMA IF NOT EXISTS waiter;
 
 CREATE TABLE waiter.waiter_account (
-    waiter_id BIGINT PRIMARY KEY,
+    waiter_id BIGSERIAL PRIMARY KEY,
     name VARCHAR NOT NULL,
-    employment_date TIMESTAMPTZ NOT NULL,
-    sex VARCHAR NOT NULL
+    sex VARCHAR NOT NULL,
+    employment_date TIMESTAMPTZ NOT NULL
 );
 
 CREATE TABLE waiter.waiter_order (
-    order_no BIGINT PRIMARY KEY,
+    order_no BIGSERIAL PRIMARY KEY,
     status VARCHAR NOT NULL,
     create_dttm TIMESTAMPTZ NOT NULL,
     waiter_id BIGINT NOT NULL REFERENCES waiter.waiter_account(waiter_id),
@@ -49,20 +49,21 @@ CREATE TABLE waiter.waiter_order (
 );
 
 CREATE TABLE waiter.payment (
-    order_no BIGINT PRIMARY KEY REFERENCES waiter.waiter_order(order_no),
+    payment_id BIGSERIAL PRIMARY KEY,
+    order_no BIGINT NOT NULL REFERENCES waiter.waiter_order(order_no),
     payment_type VARCHAR,
     payment_date TIMESTAMPTZ,
     payment_sum NUMERIC
 );
 
 CREATE TABLE waiter.menu (
-    id BIGINT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     dish_name VARCHAR NOT NULL,
     dish_cost NUMERIC NOT NULL
 );
 
 CREATE TABLE waiter.order_positions (
-    composition_id BIGINT PRIMARY KEY,
+    composition_id BIGSERIAL PRIMARY KEY,
     dish_num BIGINT NOT NULL,
     order_no BIGINT NOT NULL REFERENCES waiter.waiter_order(order_no),
     menu_position_id BIGINT NOT NULL REFERENCES waiter.menu(id)

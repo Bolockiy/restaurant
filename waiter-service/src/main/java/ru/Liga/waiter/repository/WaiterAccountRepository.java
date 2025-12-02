@@ -6,3 +6,4 @@ import ru.Liga.waiter.entity.WaiterAccount;
 public interface WaiterAccountRepository extends JpaRepository<WaiterAccount, Long> {
     Optional<WaiterAccount> findByName(String name);
 }
+

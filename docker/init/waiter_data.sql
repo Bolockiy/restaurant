@@ -1,10 +1,10 @@
 \connect waiter_db
 
-INSERT INTO waiter.waiter_account(waiter_id, name, employment_date, sex)
+INSERT INTO waiter.waiter_account(name, sex, employment_date)
 VALUES
-(1, 'Иванов Иван', NOW(), 'Male'),
-(2, 'Петров Петр', NOW(), 'Male'),
-(3, 'Сидорова Анна', NOW(), 'Female');
+('Иванов Иван', 'Male', NOW()),
+('Петров Петр', 'Male', NOW()),
+('Сидорова Анна', 'Female', NOW());
 
 INSERT INTO waiter.waiter_order(order_no, status, create_dttm, waiter_id, table_no)
 VALUES
