@@ -2,35 +2,55 @@ package ru.Liga.waiter.service;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+import ru.Liga.dto.KitchenOrderRequestDto;
+import ru.Liga.dto.WaiterOrderDto;
 import ru.Liga.waiter.entity.OrderPosition;
 import ru.Liga.waiter.entity.WaiterOrder;
+import ru.Liga.waiter.feign.KitchenFeignClient;
 import ru.Liga.waiter.repository.WaiterOrderRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class WaiterOrderService {
 
     private final WaiterOrderRepository repo;
-
-    public WaiterOrderService(WaiterOrderRepository repo) {
+    private final KitchenFeignClient kitchenClient;
+    public WaiterOrderService(WaiterOrderRepository repo, KitchenFeignClient kitchenClient) {
         this.repo = repo;
+        this.kitchenClient = kitchenClient;
     }
 
-    @Transactional
-    public WaiterOrder createOrder(WaiterOrder order) {
-        for (OrderPosition pos : order.getPositions()) {
-            pos.setOrder(order);
-        }
-        return repo.save(order);
+    public WaiterOrder createOrder(WaiterOrder dto)
+    {
+       return repo.save(dto);
     }
 
-    public List<WaiterOrder> findAll() {
-        return repo.findAll();
+    public void createOrderKitchen(@RequestBody KitchenOrderRequestDto dto) {
+        kitchenClient.sendOrderToKitchen(dto);
+    }
+    public List<WaiterOrderDto> findAllDto() {
+        return repo.findAll().stream()
+                .map(o -> new WaiterOrderDto(
+                        o.getId(),
+                        o.getStatus(),
+                        o.getTableNo(),
+                        o.getCreateDttm()
+                ))
+                .collect(Collectors.toList());
     }
 
-    public WaiterOrder findById(Long id) {
-        return repo.findById(id).orElse(null);
+    public WaiterOrderDto findByIdDto(Long id) {
+        return repo.findById(id)
+                .map(o -> new WaiterOrderDto(
+                        o.getId(),
+                        o.getStatus(),
+                        o.getTableNo(),
+                        o.getCreateDttm()
+                ))
+                .orElse(null);
     }
 
     public void delete(Long id) {

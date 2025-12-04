@@ -16,13 +16,11 @@ public class OrderToDishController {
         this.service = service;
     }
 
-    // Все блюда в заказе
     @GetMapping("/order/{orderId}")
     public List<OrderToDish> getByOrderId(@PathVariable Long orderId) {
         return service.getByOrderId(orderId);
     }
 
-    // Получить одну связь
     @GetMapping("/{orderId}/{dishId}")
     public OrderToDish getOne(@PathVariable Long orderId,
                               @PathVariable Long dishId) {

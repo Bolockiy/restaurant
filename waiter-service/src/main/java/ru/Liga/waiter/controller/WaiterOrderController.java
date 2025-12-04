@@ -1,6 +1,8 @@
 package ru.Liga.waiter.controller;
 
 import org.springframework.web.bind.annotation.*;
+import ru.Liga.dto.KitchenOrderRequestDto;
+import ru.Liga.dto.WaiterOrderDto;
 import ru.Liga.waiter.entity.WaiterOrder;
 import ru.Liga.waiter.service.WaiterOrderService;
 
@@ -21,14 +23,20 @@ public class WaiterOrderController {
         return service.createOrder(order);
     }
 
+    @PostMapping("/status")
+    public void createKitchen(@RequestBody KitchenOrderRequestDto order) {
+        service.createOrderKitchen(order);
+    }
+
+
     @GetMapping
-    public List<WaiterOrder> getAll() {
-        return service.findAll();
+    public List<WaiterOrderDto> getAllOrders() {
+        return service.findAllDto();
     }
 
     @GetMapping("/{id}")
-    public WaiterOrder getById(@PathVariable Long id) {
-        return service.findById(id);
+    public WaiterOrderDto getOrderById(@PathVariable Long id) {
+        return service.findByIdDto(id);
     }
 
     @DeleteMapping("/{id}")

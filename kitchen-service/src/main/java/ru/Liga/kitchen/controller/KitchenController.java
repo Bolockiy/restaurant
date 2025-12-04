@@ -1,13 +1,13 @@
 package ru.Liga.kitchen.controller;
 
 import org.springframework.web.bind.annotation.*;
+import ru.Liga.dto.KitchenOrderRequestDto;
 import ru.Liga.kitchen.entity.KitchenOrder;
 import ru.Liga.kitchen.service.KitchenService;
 
 import java.util.List;
-
 @RestController
-@RequestMapping("/kitchen/Order")
+@RequestMapping("/kitchen/orders")
 public class KitchenController {
 
     private final KitchenService kitchenService;
@@ -26,8 +26,13 @@ public class KitchenController {
         return kitchenService.getAll();
     }
 
-    @PostMapping
+    @PostMapping("/internal")
     public void create(@RequestBody KitchenOrder kitchenOrder) {
+        kitchenService.create(kitchenOrder);
+    }
+
+    @PostMapping
+    public void receiveOrder(@RequestBody KitchenOrder kitchenOrder) {
         kitchenService.create(kitchenOrder);
     }
 
@@ -41,4 +46,7 @@ public class KitchenController {
     public void delete(@PathVariable Long id) {
         kitchenService.delete(id);
     }
+
+
 }
+

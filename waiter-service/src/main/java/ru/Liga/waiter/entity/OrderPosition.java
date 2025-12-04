@@ -1,5 +1,6 @@
 package ru.Liga.waiter.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,7 @@ public class OrderPosition {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_no", nullable = false)
+    @JsonBackReference
     private WaiterOrder order;
 
     @ManyToOne(fetch = FetchType.LAZY)

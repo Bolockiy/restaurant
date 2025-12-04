@@ -1,5 +1,7 @@
 package ru.Liga.waiter.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +13,7 @@ import java.util.List;
 @Table(name = "waiter_account", schema = "waiter")
 @Getter
 @Setter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class WaiterAccount {
 
     @Id
@@ -33,5 +36,6 @@ public class WaiterAccount {
     private OffsetDateTime employmentDate;
 
     @OneToMany(mappedBy = "waiter", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<WaiterOrder> orders;
 }

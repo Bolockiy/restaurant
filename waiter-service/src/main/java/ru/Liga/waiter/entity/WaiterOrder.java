@@ -1,5 +1,8 @@
 package ru.Liga.waiter.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +14,8 @@ import java.util.List;
 @Table(name = "waiter_order", schema = "waiter")
 @Getter
 @Setter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+
 public class WaiterOrder {
 
     @Id
@@ -34,11 +39,14 @@ public class WaiterOrder {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "waiter_id", nullable = false)
+    @JsonBackReference
     private WaiterAccount waiter;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<OrderPosition> positions;
 
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private Payment payment;
 }
