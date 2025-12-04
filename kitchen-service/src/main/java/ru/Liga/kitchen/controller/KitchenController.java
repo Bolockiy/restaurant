@@ -33,7 +33,7 @@ public class KitchenController {
 
     @PutMapping("/{id}")
     public void update(@PathVariable Long id, @RequestBody KitchenOrder kitchenOrder) {
-        kitchenOrder.setKitchen_order_id(id);
+        kitchenOrder.setKitchenOrderId(id);
         kitchenService.update(kitchenOrder);
     }
 
