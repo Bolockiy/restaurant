@@ -18,27 +18,18 @@ public class WaiterAccountController {
         this.waiterService = waiterService;
     }
 
-    // ------------------------------
-    // CREATE
-    // ------------------------------
     @PostMapping
     public ResponseEntity<WaiterAccountDto> createAccount(@RequestBody WaiterAccountDto dto) {
         WaiterAccountDto saved = waiterService.save(dto);
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
-    // ------------------------------
-    // READ ALL
-    // ------------------------------
     @GetMapping("/all")
     public ResponseEntity<List<WaiterAccountDto>> findAll() {
         List<WaiterAccountDto> accounts = waiterService.findAll();
         return ResponseEntity.ok(accounts);
     }
 
-    // ------------------------------
-    // READ ONE BY ID
-    // ------------------------------
     @GetMapping("/{id}")
     public ResponseEntity<WaiterAccountDto> findById(@PathVariable Long id) {
         WaiterAccountDto dto = waiterService.findById(id);
@@ -48,9 +39,6 @@ public class WaiterAccountController {
         return ResponseEntity.ok(dto);
     }
 
-    // ------------------------------
-    // UPDATE
-    // ------------------------------
     @PutMapping("/{id}")
     public ResponseEntity<WaiterAccountDto> update(@PathVariable Long id, @RequestBody WaiterAccountDto dto) {
         WaiterAccountDto updated = waiterService.update(id, dto);
@@ -60,9 +48,6 @@ public class WaiterAccountController {
         return ResponseEntity.ok(updated);
     }
 
-    // ------------------------------
-    // DELETE
-    // ------------------------------
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         boolean deleted = waiterService.delete(id);
@@ -72,9 +57,6 @@ public class WaiterAccountController {
         return ResponseEntity.noContent().build();
     }
 
-    // ------------------------------
-    // READ BY NAME
-    // ------------------------------
     @GetMapping("/search")
     public ResponseEntity<List<WaiterAccountDto>> findByName(@RequestParam String name) {
         List<WaiterAccountDto> accounts = waiterService.findByName(name);

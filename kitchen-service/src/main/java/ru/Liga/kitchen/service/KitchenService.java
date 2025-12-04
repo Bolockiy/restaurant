@@ -10,11 +10,9 @@ import java.util.List;
 public class KitchenService {
 
     private final KitchenOrderMapper kitchenOrderMapper;
-
     public KitchenService(KitchenOrderMapper kitchenOrderMapper) {
         this.kitchenOrderMapper = kitchenOrderMapper;
     }
-
     public KitchenOrder getById(Long id) {
         return kitchenOrderMapper.findById(id);
     }
