@@ -1,4 +1,4 @@
-package ru.Liga;
+package ru.Liga.kitchen.exception;
 
 public class BusinessException extends RuntimeException {
     public BusinessException(String message) {

@@ -27,7 +27,6 @@
         <module>kitchen-service</module>
         <module>restaurant-app</module>
         <module>migrations</module>
-        <module>exceptions</module>
     </modules>
     <scm>
 		<connection/>
