@@ -28,9 +28,7 @@ public class KitchenService {
         this.orderToDishService = orderToDishService;
     }
 
-    /**
-     * Создание нового заказа и добавление блюд
-     */
+
     public void setOrderReady(KitchenOrderRequestDto dto) {
         if (dto == null || dto.getWaiterOrderNo() == null) {
             throw new BusinessException("Waiter order number is required");
@@ -62,9 +60,7 @@ public class KitchenService {
         }
     }
 
-    /**
-     * Отметить заказ как готовый и уведомить официанта
-     */
+
     @Transactional
     public void markOrderReady(Long kitchenOrderId) {
         if (kitchenOrderId == null || kitchenOrderId <= 0) {
@@ -87,9 +83,7 @@ public class KitchenService {
         waiterClient.updateOrderStatus(dto);
     }
 
-    /**
-     * Получить заказ по ID
-     */
+
     public KitchenOrder getById(Long id) {
         if (id == null || id <= 0) {
             throw new BusinessException("Invalid kitchen order ID");
@@ -103,16 +97,12 @@ public class KitchenService {
         return order;
     }
 
-    /**
-     * Получить все заказы
-     */
+
     public List<KitchenOrder> getAll() {
         return kitchenOrderMapper.findAll();
     }
 
-    /**
-     * Создать новый заказ напрямую
-     */
+
     public void create(KitchenOrder kitchenOrder) {
         if (kitchenOrder == null || kitchenOrder.getWaiterOrderNo() == null) {
             throw new BusinessException("Order or waiter order number cannot be null");
@@ -123,9 +113,6 @@ public class KitchenService {
         kitchenOrderMapper.insert(kitchenOrder);
     }
 
-    /**
-     * Обновить заказ
-     */
     public void update(KitchenOrder kitchenOrder) {
         if (kitchenOrder == null || kitchenOrder.getKitchenOrderId() == null) {
             throw new BusinessException("Order or kitchen order ID cannot be null");
@@ -139,9 +126,7 @@ public class KitchenService {
         kitchenOrderMapper.update(kitchenOrder);
     }
 
-    /**
-     * Удалить заказ по ID
-     */
+
     public void delete(Long id) {
         if (id == null || id <= 0) {
             throw new BusinessException("Invalid kitchen order ID");
