@@ -31,7 +31,7 @@ public class WaiterOrderService {
     public void createOrderKitchen(@RequestBody KitchenOrderRequestDto dto) {
         kitchenClient.sendOrderToKitchen(dto);
     }
-    public List<WaiterOrderDto> findAllDto() {
+    public List<WaiterOrderDto> findAll() {
         return repo.findAll().stream()
                 .map(o -> new WaiterOrderDto(
                         o.getId(),
@@ -42,7 +42,7 @@ public class WaiterOrderService {
                 .collect(Collectors.toList());
     }
 
-    public WaiterOrderDto findByIdDto(Long id) {
+    public WaiterOrderDto findById(Long id) {
         return repo.findById(id)
                 .map(o -> new WaiterOrderDto(
                         o.getId(),
@@ -55,6 +55,16 @@ public class WaiterOrderService {
 
     public void delete(Long id) {
         repo.deleteById(id);
+    }
+
+    @Transactional
+    public void updateOrderStatus(Long waiterOrderNo, String status) {
+
+        WaiterOrder order = repo.findById(waiterOrderNo)
+                .orElseThrow(() -> new RuntimeException("Order not found: " + waiterOrderNo));
+
+        order.setStatus(status);
+        repo.save(order);
     }
 
 }

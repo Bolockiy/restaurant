@@ -10,6 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 public class KitchenOrderRequestDto
 {
-    Long waiterOrderNo;
-    List<DishOrderDto> dishes;
+    private Long waiterOrderNo;
+
+    private List<OrderToDishDto> dishes;
 }

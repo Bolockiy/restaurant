@@ -5,9 +5,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.Liga.dto.OrderStatusDto;
 
-@FeignClient(name = "waiter-service", url = "http://localhost:8083") // адрес сервиса официанта
+@FeignClient(name = "waiter-service", url = "http://localhost:8083")
 public interface WaiterFeignClient {
 
-    @PostMapping("/orders/status")
-    void updateOrderStatus(@RequestBody OrderStatusDto statusDto);
+    @PostMapping("/waiter/orders/status")
+    void updateOrderStatus(@RequestBody OrderStatusDto dto);
 }

@@ -1,11 +1,12 @@
 package ru.Liga.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class OrderStatusDto {
-    private Long orderId;
-    private String status;
+    private Long waiterOrderNo;
+    private String status; // READY
 }

@@ -1,11 +1,13 @@
 package ru.Liga.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 
 @Data
 @AllArgsConstructor
-public class DishOrderDto {
+@NoArgsConstructor
+@Getter
+@Setter
+public class OrderToDishDto {
     private Long dishId;
     private Long dishesNumber;
 }

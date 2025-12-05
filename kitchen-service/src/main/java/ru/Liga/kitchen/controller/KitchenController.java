@@ -27,8 +27,13 @@ public class KitchenController {
     }
 
     @PostMapping("/internal")
-    public void create(@RequestBody KitchenOrder kitchenOrder) {
-        kitchenService.create(kitchenOrder);
+    public void create(@RequestBody KitchenOrderRequestDto kitchenOrder) {
+        kitchenService.setOrderReady(kitchenOrder);
+    }
+
+    @PostMapping("/{id}/ready")
+    public void markReady(@PathVariable Long id) {
+        kitchenService.markOrderReady(id);
     }
 
     @PostMapping

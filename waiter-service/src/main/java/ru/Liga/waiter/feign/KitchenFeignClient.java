@@ -7,6 +7,6 @@ import ru.Liga.dto.KitchenOrderRequestDto;
 
 @FeignClient(name = "kitchen-service", url = "http://localhost:8082/")
 public interface KitchenFeignClient {
-    @PostMapping("/kitchen/orders")
+    @PostMapping("/kitchen/orders/internal")
     void sendOrderToKitchen(@RequestBody KitchenOrderRequestDto dto);
 }
