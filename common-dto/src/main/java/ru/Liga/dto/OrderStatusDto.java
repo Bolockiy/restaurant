@@ -5,8 +5,8 @@ import lombok.*;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class OrderStatusDto {
     private Long waiterOrderNo;
-    private String status; // READY
+    private String status;
+    public OrderStatusDto(){}
 }

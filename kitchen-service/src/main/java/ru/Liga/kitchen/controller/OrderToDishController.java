@@ -27,26 +27,22 @@ public class OrderToDishController {
         return service.getOne(orderId, dishId);
     }
 
-    // Добавить блюдо в заказ
     @PostMapping
     public void create(@RequestBody OrderToDish orderToDish) {
         service.create(orderToDish);
     }
 
-    // Обновить количество
     @PutMapping
     public void update(@RequestBody OrderToDish orderToDish) {
         service.update(orderToDish);
     }
 
-    // Удалить одно блюдо из заказа
     @DeleteMapping("/{orderId}/{dishId}")
     public void delete(@PathVariable Long orderId,
                        @PathVariable Long dishId) {
         service.delete(orderId, dishId);
     }
 
-    // Удалить все блюда из заказа
     @DeleteMapping("/order/{orderId}")
     public void deleteByOrder(@PathVariable Long orderId) {
         service.deleteByOrderId(orderId);

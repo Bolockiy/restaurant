@@ -28,7 +28,7 @@ public class KitchenController {
 
     @PostMapping("/internal")
     public void create(@RequestBody KitchenOrderRequestDto kitchenOrder) {
-        kitchenService.setOrderReady(kitchenOrder);
+        kitchenService.processOrderFromWaiter(kitchenOrder);
     }
 
     @PostMapping("/{id}/ready")

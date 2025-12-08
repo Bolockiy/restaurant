@@ -13,4 +13,5 @@ public class KitchenOrderRequestDto
     private Long waiterOrderNo;
 
     private List<OrderToDishDto> dishes;
+    public KitchenOrderRequestDto() {}
 }

@@ -1,15 +1,17 @@
 package ru.Liga.kitchen.service;
 
 import jakarta.transaction.Transactional;
+import lombok.Getter;
 import org.springframework.stereotype.Service;
 import ru.Liga.dto.KitchenOrderRequestDto;
 import ru.Liga.dto.OrderStatusDto;
 import ru.Liga.dto.OrderToDishDto;
+import ru.Liga.kitchen.Kafka.KitchenKafkaProducer;
+import ru.Liga.kitchen.entity.Dish;
 import ru.Liga.kitchen.entity.KitchenOrder;
 import ru.Liga.kitchen.entity.OrderToDish;
 import ru.Liga.kitchen.exception.NotFoundException;
 import ru.Liga.kitchen.exception.BusinessException;
-import ru.Liga.kitchen.feign.WaiterFeignClient;
 import ru.Liga.kitchen.mapper.KitchenOrderMapper;
 
 import java.time.OffsetDateTime;
@@ -19,36 +21,42 @@ import java.util.List;
 public class KitchenService {
 
     private final KitchenOrderMapper kitchenOrderMapper;
-    private final WaiterFeignClient waiterClient;
     private final OrderToDishService orderToDishService;
+    @Getter
+    private final KitchenKafkaProducer kitchenKafkaProducer;
+    private final DishService dishService;
 
-    public KitchenService(KitchenOrderMapper kitchenOrderMapper, WaiterFeignClient waiterClient, OrderToDishService orderToDishService) {
+    public KitchenService(KitchenOrderMapper kitchenOrderMapper,  OrderToDishService orderToDishService, KitchenKafkaProducer kitchenKafkaProducer, DishService dishService) {
         this.kitchenOrderMapper = kitchenOrderMapper;
-        this.waiterClient = waiterClient;
         this.orderToDishService = orderToDishService;
+        this.kitchenKafkaProducer = kitchenKafkaProducer;
+        this.dishService = dishService;
     }
 
 
-    public void setOrderReady(KitchenOrderRequestDto dto) {
-        if (dto == null || dto.getWaiterOrderNo() == null) {
+    @Transactional
+    public void processOrderFromWaiter(KitchenOrderRequestDto dto) {
+        System.out.println("Processing order: " + dto.getWaiterOrderNo());
+
+        if (dto.getWaiterOrderNo() == null) {
             throw new BusinessException("Waiter order number is required");
         }
-
-        KitchenOrder order = new KitchenOrder();
-        order.setWaiterOrderNo(dto.getWaiterOrderNo());
-        order.setStatus("NEW");
-        order.setCreateDttm(OffsetDateTime.now());
-
-        kitchenOrderMapper.insert(order);
-        Long kitchenOrderId = order.getKitchenOrderId();
 
         if (dto.getDishes() == null || dto.getDishes().isEmpty()) {
             throw new BusinessException("Order must contain at least one dish");
         }
 
+        KitchenOrder order = new KitchenOrder();
+        order.setWaiterOrderNo(dto.getWaiterOrderNo());
+        order.setStatus("RECEIVED");
+        order.setCreateDttm(OffsetDateTime.now());
+
+        kitchenOrderMapper.insert(order);
+        Long kitchenOrderId = order.getKitchenOrderId();
+
         for (OrderToDishDto d : dto.getDishes()) {
             if (d.getDishId() == null || d.getDishesNumber() == null || d.getDishesNumber() <= 0) {
-                throw new BusinessException("Each dish must have a valid id and quantity > 0");
+                throw new BusinessException("Each dish must have valid id and quantity > 0");
             }
 
             OrderToDish otd = new OrderToDish();
@@ -58,11 +66,14 @@ public class KitchenService {
 
             orderToDishService.create(otd);
         }
+
+        System.out.println("Order saved to kitchen DB");
     }
 
 
     @Transactional
     public void markOrderReady(Long kitchenOrderId) {
+
         if (kitchenOrderId == null || kitchenOrderId <= 0) {
             throw new BusinessException("Invalid kitchen order ID");
         }
@@ -80,9 +91,17 @@ public class KitchenService {
         kitchenOrderMapper.update(order);
 
         OrderStatusDto dto = new OrderStatusDto(order.getWaiterOrderNo(), "READY");
-        waiterClient.updateOrderStatus(dto);
+        kitchenKafkaProducer.sendStatusToWaiter(dto);
     }
-
+    public boolean checkProductsAvailability(KitchenOrderRequestDto dto) {
+        for (OrderToDishDto dish : dto.getDishes()) {
+            Dish d =  dishService.getById(dish.getDishId());
+            if (d == null || d.getBalance() < dish.getDishesNumber()) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     public KitchenOrder getById(Long id) {
         if (id == null || id <= 0) {
@@ -140,4 +159,5 @@ public class KitchenService {
         kitchenOrderMapper.delete(id);
         orderToDishService.deleteByOrderId(id);
     }
+
 }

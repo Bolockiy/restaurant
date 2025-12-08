@@ -2,12 +2,10 @@ package ru.Liga.waiter.service;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import ru.Liga.dto.KitchenOrderRequestDto;
 import ru.Liga.dto.WaiterOrderDto;
-import ru.Liga.waiter.entity.OrderPosition;
 import ru.Liga.waiter.entity.WaiterOrder;
-import ru.Liga.waiter.feign.KitchenFeignClient;
+import ru.Liga.waiter.kafka.KitchenKafkaProducer;
 import ru.Liga.waiter.repository.WaiterOrderRepository;
 
 import java.util.List;
@@ -17,20 +15,22 @@ import java.util.stream.Collectors;
 public class WaiterOrderService {
 
     private final WaiterOrderRepository repo;
-    private final KitchenFeignClient kitchenClient;
-    public WaiterOrderService(WaiterOrderRepository repo, KitchenFeignClient kitchenClient) {
+    private final KitchenKafkaProducer kafkaProducer;
+
+    public WaiterOrderService(WaiterOrderRepository repo,
+                              KitchenKafkaProducer kafkaProducer) {
         this.repo = repo;
-        this.kitchenClient = kitchenClient;
+        this.kafkaProducer = kafkaProducer;
     }
 
-    public WaiterOrder createOrder(WaiterOrder dto)
-    {
-       return repo.save(dto);
+    public WaiterOrder createOrder(WaiterOrder dto) {
+        return repo.save(dto);
     }
 
-    public void createOrderKitchen(@RequestBody KitchenOrderRequestDto dto) {
-        kitchenClient.sendOrderToKitchen(dto);
+    public void createOrderKitchen(KitchenOrderRequestDto dto) {
+        kafkaProducer.sendOrderToKitchen(dto);
     }
+
     public List<WaiterOrderDto> findAll() {
         return repo.findAll().stream()
                 .map(o -> new WaiterOrderDto(
@@ -59,12 +59,14 @@ public class WaiterOrderService {
 
     @Transactional
     public void updateOrderStatus(Long waiterOrderNo, String status) {
-
         WaiterOrder order = repo.findById(waiterOrderNo)
                 .orElseThrow(() -> new RuntimeException("Order not found: " + waiterOrderNo));
+
+        if (status.equals(order.getStatus())) {
+            return; // ничего не делаем, чтобы не вызвать лишние события
+        }
 
         order.setStatus(status);
         repo.save(order);
     }
-
 }
