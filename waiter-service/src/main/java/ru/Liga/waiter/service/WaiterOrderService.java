@@ -1,6 +1,8 @@
 package ru.Liga.waiter.service;
 
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.Liga.dto.KitchenOrderRequestDto;
 import ru.Liga.dto.WaiterOrderDto;
@@ -14,6 +16,8 @@ import java.util.stream.Collectors;
 @Service
 public class WaiterOrderService {
 
+    private static final Logger log = LoggerFactory.getLogger(WaiterOrderService.class);
+
     private final WaiterOrderRepository repo;
     private final KitchenKafkaProducer kafkaProducer;
 
@@ -24,14 +28,20 @@ public class WaiterOrderService {
     }
 
     public WaiterOrder createOrder(WaiterOrder dto) {
-        return repo.save(dto);
+        log.info("Создание нового заказа: tableNo={}, status={}", dto.getTableNo(), dto.getStatus());
+        WaiterOrder saved = repo.save(dto);
+        log.debug("Заказ сохранён: id={}", saved.getId());
+        return saved;
     }
 
     public void createOrderKitchen(KitchenOrderRequestDto dto) {
+        log.info("Отправка заказа на кухню: waiterOrderNo={}", dto.getWaiterOrderNo());
         kafkaProducer.sendOrderToKitchen(dto);
+        log.debug("Заказ отправлен в Kafka: {}", dto);
     }
 
     public List<WaiterOrderDto> findAll() {
+        log.debug("Получение всех заказов");
         return repo.findAll().stream()
                 .map(o -> new WaiterOrderDto(
                         o.getId(),
@@ -43,30 +53,44 @@ public class WaiterOrderService {
     }
 
     public WaiterOrderDto findById(Long id) {
+        log.debug("Получение заказа по id={}", id);
         return repo.findById(id)
-                .map(o -> new WaiterOrderDto(
-                        o.getId(),
-                        o.getStatus(),
-                        o.getTableNo(),
-                        o.getCreateDttm()
-                ))
-                .orElseThrow(() -> new IllegalArgumentException("Order not found with id " + id));
+                .map(o -> {
+                    log.info("Заказ найден: id={}", o.getId());
+                    return new WaiterOrderDto(
+                            o.getId(),
+                            o.getStatus(),
+                            o.getTableNo(),
+                            o.getCreateDttm()
+                    );
+                })
+                .orElseThrow(() -> {
+                    log.warn("Заказ не найден: id={}", id);
+                    return new IllegalArgumentException("Order not found with id " + id);
+                });
     }
 
     public void delete(Long id) {
+        log.info("Удаление заказа: id={}", id);
         repo.deleteById(id);
     }
 
     @Transactional
     public void updateOrderStatus(Long waiterOrderNo, String status) {
+        log.info("Обновление статуса заказа: id={}, newStatus={}", waiterOrderNo, status);
         WaiterOrder order = repo.findById(waiterOrderNo)
-                .orElseThrow(() -> new RuntimeException("Order not found: " + waiterOrderNo));
+                .orElseThrow(() -> {
+                    log.warn("Заказ не найден для обновления статуса: id={}", waiterOrderNo);
+                    return new RuntimeException("Order not found: " + waiterOrderNo);
+                });
 
         if (status.equals(order.getStatus())) {
+            log.debug("Статус заказа не изменился: id={}, status={}", waiterOrderNo, status);
             return;
         }
 
         order.setStatus(status);
         repo.save(order);
+        log.info("Статус заказа обновлён: id={}, newStatus={}", waiterOrderNo, status);
     }
 }

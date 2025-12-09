@@ -7,7 +7,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 @MapperScan("ru.Liga.kitchen.mapper")
 @EnableFeignClients
-class KitchenApplication {
+public class KitchenApplication {
     public static void main(String[] args) {
         SpringApplication.run(KitchenApplication.class, args);
     }
