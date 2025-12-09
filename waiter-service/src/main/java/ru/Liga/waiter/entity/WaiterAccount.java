@@ -2,6 +2,7 @@ package ru.Liga.waiter.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Schema(description = "Сущность аккаунта официанта")
 public class WaiterAccount {
 
     @Id
@@ -24,18 +26,26 @@ public class WaiterAccount {
             allocationSize = 1
     )
     @Column(name = "waiter_id")
+    @Schema(description = "Уникальный идентификатор официанта", example = "12")
     private Long id;
 
     @Column(nullable = false)
+    @Schema(description = "Имя официанта", example = "Иван Петров")
     private String name;
 
     @Column(nullable = false)
+    @Schema(description = "Пол официанта", example = "MALE")
     private String sex;
 
     @Column(name = "employment_date", nullable = false)
+    @Schema(
+            description = "Дата и время трудоустройства официанта",
+            example = "2024-01-15T10:30:00+03:00"
+    )
     private OffsetDateTime employmentDate;
 
     @OneToMany(mappedBy = "waiter", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
+    @Schema(description = "Список заказов, оформленных этим официантом")
     private List<WaiterOrder> orders;
 }

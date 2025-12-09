@@ -36,5 +36,10 @@ management:
       properties:
         spring.json.trusted.packages: "ru.Liga.dto"
         spring.json.value.default.type: "ru.Liga.dto.OrderStatusDto"
+logging:
+  level:
+    root: INFO
+    org.hibernate.SQL: WARN
+    ru.Liga.waiter: DEBUG
 server:
   port: 8083

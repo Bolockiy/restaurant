@@ -50,7 +50,7 @@ public class WaiterOrderService {
                         o.getTableNo(),
                         o.getCreateDttm()
                 ))
-                .orElse(null);
+                .orElseThrow(() -> new IllegalArgumentException("Order not found with id " + id));
     }
 
     public void delete(Long id) {
@@ -63,7 +63,7 @@ public class WaiterOrderService {
                 .orElseThrow(() -> new RuntimeException("Order not found: " + waiterOrderNo));
 
         if (status.equals(order.getStatus())) {
-            return; // ничего не делаем, чтобы не вызвать лишние события
+            return;
         }
 
         order.setStatus(status);

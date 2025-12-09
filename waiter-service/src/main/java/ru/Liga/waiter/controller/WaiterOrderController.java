@@ -1,5 +1,10 @@
 package ru.Liga.waiter.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 import ru.Liga.dto.KitchenOrderRequestDto;
 import ru.Liga.dto.OrderStatusDto;
@@ -11,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/waiter/orders")
+@Tag(name = "Waiter API", description = "Операции с заказами официантов")
 public class WaiterOrderController {
 
     private final WaiterOrderService service;
@@ -19,36 +25,116 @@ public class WaiterOrderController {
         this.service = service;
     }
 
+    // ----------------------------------------------------------------------
+
+    @Operation(
+            summary = "Создать заказ официанта",
+            description = "Создаёт новый заказ официанта вместе с позициями"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Заказ успешно создан"),
+            @ApiResponse(responseCode = "400", description = "Неверные данные заказа")
+    })
     @PostMapping
-    public WaiterOrder create(@RequestBody WaiterOrder order) {
+    public WaiterOrder create(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Сущность заказа",
+                    required = true
+            )
+            @RequestBody WaiterOrder order
+    ) {
         return service.createOrder(order);
     }
 
+    // ----------------------------------------------------------------------
+
+    @Operation(
+            summary = "Создать заказ для кухни",
+            description = "Передаёт заказ кухни напрямую через Kafka"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Заказ отправлен на кухню"),
+            @ApiResponse(responseCode = "400", description = "Ошибка в данных заказа")
+    })
     @PostMapping("/order")
-    public void createKitchen(@RequestBody KitchenOrderRequestDto order) {
+    public void createKitchen(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "DTO заказа для кухни",
+                    required = true
+            )
+            @RequestBody KitchenOrderRequestDto order
+    ) {
         service.createOrderKitchen(order);
     }
 
+    // ----------------------------------------------------------------------
 
+    @Operation(
+            summary = "Получить все заказы официантов",
+            description = "Возвращает список всех заказов"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Список заказов получен")
+    })
     @GetMapping
     public List<WaiterOrderDto> getAllOrders() {
         return service.findAll();
     }
 
+    // ----------------------------------------------------------------------
+
+    @Operation(
+            summary = "Получить заказ официанта по ID",
+            description = "Возвращает заказ официанта с позициями"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Заказ найден"),
+            @ApiResponse(responseCode = "404", description = "Заказ не найден")
+    })
     @GetMapping("/{id}")
-    public WaiterOrderDto getOrderById(@PathVariable Long id) {
+    public WaiterOrderDto getOrderById(
+            @Parameter(description = "ID заказа официанта", example = "15")
+            @PathVariable Long id
+    ) {
         return service.findById(id);
     }
 
+    // ----------------------------------------------------------------------
+
+    @Operation(
+            summary = "Удалить заказ официанта",
+            description = "Полностью удаляет заказ и все позиции"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Заказ удалён"),
+            @ApiResponse(responseCode = "404", description = "Заказ не найден")
+    })
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public void delete(
+            @Parameter(description = "ID заказа официанта", example = "11")
+            @PathVariable Long id
+    ) {
         service.delete(id);
     }
+
+    // ----------------------------------------------------------------------
+
+    @Operation(
+            summary = "Обновить статус заказа",
+            description = "Меняет статус заказа и отправляет событие"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Статус обновлён"),
+            @ApiResponse(responseCode = "400", description = "Неверные данные статуса")
+    })
     @PostMapping("/status")
-    public void updateStatus(@RequestBody OrderStatusDto dto) {
-        service.updateOrderStatus(
-                dto.getWaiterOrderNo(),
-                dto.getStatus()
-        );
+    public void updateStatus(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "DTO изменения статуса заказа",
+                    required = true
+            )
+            @RequestBody OrderStatusDto dto
+    ) {
+        service.updateOrderStatus(dto.getWaiterOrderNo(), dto.getStatus());
     }
 }
