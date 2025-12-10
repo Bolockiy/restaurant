@@ -3,12 +3,12 @@ package service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
-import ru.Liga.dto.KitchenOrderRequestDto;
-import ru.Liga.dto.WaiterOrderDto;
-import ru.Liga.waiter.entity.WaiterOrder;
-import ru.Liga.waiter.kafka.KitchenKafkaProducer;
-import ru.Liga.waiter.repository.WaiterOrderRepository;
-import ru.Liga.waiter.service.WaiterOrderService;
+import liga.restaurant.dto.KitchenOrderRequestDto;
+import liga.restaurant.dto.WaiterOrderDto;
+import liga.restaurant.waiter.entity.WaiterOrder;
+import liga.restaurant.waiter.kafka.KitchenKafkaProducer;
+import liga.restaurant.waiter.repository.WaiterOrderRepository;
+import liga.restaurant.waiter.service.WaiterOrderService;
 
 import java.time.OffsetDateTime;
 import java.util.Arrays;

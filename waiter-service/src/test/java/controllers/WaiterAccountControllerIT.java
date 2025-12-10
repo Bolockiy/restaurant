@@ -1,18 +1,19 @@
 package controllers;
 
+import liga.restaurant.waiter.WaiterApplication;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
-import ru.Liga.dto.WaiterAccountDto;
+import liga.restaurant.dto.WaiterAccountDto;
 
 import java.time.OffsetDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        classes = ru.Liga.waiter.WaiterApplication.class)
+        classes = WaiterApplication.class)
 
 class WaiterAccountControllerIT {
 

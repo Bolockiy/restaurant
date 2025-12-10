@@ -1,0 +1,6 @@
+CREATE TABLE kitchen.dish(
+dish_id BIGSERIAL PRIMARY KEY,
+balance BIGINT NOT NULL,
+short_name VARCHAR NOT NULL,
+dish_composition VARCHAR NOT NULL
+);

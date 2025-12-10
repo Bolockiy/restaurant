@@ -1,0 +1,6 @@
+CREATE TABLE waiter.waiter_account (
+waiter_id BIGSERIAL PRIMARY KEY,
+name VARCHAR NOT NULL,
+sex VARCHAR NOT NULL,
+employment_date TIMESTAMPTZ NOT NULL
+);

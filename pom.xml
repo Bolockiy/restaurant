@@ -25,7 +25,6 @@
         <module>common-dto</module>
         <module>waiter-service</module>
         <module>kitchen-service</module>
-        <module>restaurant-app</module>
         <module>migrations</module>
     </modules>
     <scm>

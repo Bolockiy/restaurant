@@ -1,0 +1,148 @@
+package liga.restaurant.kitchen.controller;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.bind.annotation.*;
+import liga.restaurant.dto.KitchenOrderRequestDto;
+import liga.restaurant.kitchen.entity.KitchenOrder;
+import liga.restaurant.kitchen.service.KitchenService;
+
+import java.util.List;
+@RestController
+@RequestMapping("/kitchen/orders")
+@Tag(name = "Kitchen API", description = "Работа с заказами кухни")
+
+public class KitchenController {
+
+    private final KitchenService kitchenService;
+    public KitchenController(KitchenService kitchenService) {
+        this.kitchenService = kitchenService;
+    }
+
+    @Operation(
+            summary = "Получить заказ кухни по ID",
+            description = "Возвращает один заказ кухни по его идентификатору"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Заказ найден"),
+            @ApiResponse(responseCode = "404", description = "Заказ не найден"),
+            @ApiResponse(responseCode = "400", description = "Некорректный ID")
+    })
+    @GetMapping("/{id}")
+    public KitchenOrder getById(
+            @Parameter(description = "ID заказа кухни", example = "1")
+            @PathVariable Long id
+    ) {
+        return kitchenService.getById(id);
+    }
+
+    @Operation(
+            summary = "Получить все заказы кухни",
+            description = "Возвращает список всех заказов кухни"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Список заказов получен")
+    })
+    @GetMapping
+    public List<KitchenOrder> getAll() {
+        return kitchenService.getAll();
+    }
+
+    @Operation(
+            summary = "Принять заказ от официанта (через Kafka)",
+            description = "Используется для внутренней передачи заказов из waiter-service"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Заказ принят кухней"),
+            @ApiResponse(responseCode = "400", description = "Ошибка в данных заказа")
+    })
+    @PostMapping("/internal")
+    public void create(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "DTO заказа от официанта",
+                    required = true
+            )
+            @RequestBody KitchenOrderRequestDto kitchenOrder
+    ) {
+        kitchenService.processOrderFromWaiter(kitchenOrder);
+    }
+
+    @Operation(
+            summary = "Отметить заказ как READY",
+            description = "Меняет статус заказа кухни и отправляет статус официанту"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Заказ отмечен как READY"),
+            @ApiResponse(responseCode = "404", description = "Заказ не найден")
+    })
+    @PostMapping("/{id}/ready")
+    public void markReady(
+            @Parameter(description = "ID заказа кухни", example = "10")
+            @PathVariable Long id
+    ) {
+        kitchenService.markOrderReady(id);
+    }
+
+    @Operation(
+            summary = "Создать новый заказ кухни вручную",
+            description = "Используется для ручного создания заказа"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Заказ успешно создан"),
+            @ApiResponse(responseCode = "400", description = "Ошибочные данные")
+    })
+    @PostMapping
+    public void receiveOrder(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Сущность заказа кухни",
+                    required = true
+            )
+            @RequestBody KitchenOrder kitchenOrder
+    ) {
+        kitchenService.create(kitchenOrder);
+    }
+
+    @Operation(
+            summary = "Обновить заказ кухни",
+            description = "Обновляет данные заказа кухни по ID"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Заказ обновлён"),
+            @ApiResponse(responseCode = "404", description = "Заказ не найден")
+    })
+    @PutMapping("/{id}")
+    public void update(
+            @Parameter(description = "ID заказа кухни", example = "5")
+            @PathVariable Long id,
+
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Обновлённые данные заказа",
+                    required = true
+            )
+            @RequestBody KitchenOrder kitchenOrder
+    ) {
+        kitchenOrder.setKitchenOrderId(id);
+        kitchenService.update(kitchenOrder);
+    }
+
+    @Operation(
+            summary = "Удалить заказ кухни",
+            description = "Полностью удаляет заказ кухни по ID"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Заказ удалён"),
+            @ApiResponse(responseCode = "404", description = "Заказ не найден")
+    })
+    @DeleteMapping("/{id}")
+    public void delete(
+            @Parameter(description = "ID заказа кухни", example = "7")
+            @PathVariable Long id
+    ) {
+        kitchenService.delete(id);
+    }
+}
+
+
