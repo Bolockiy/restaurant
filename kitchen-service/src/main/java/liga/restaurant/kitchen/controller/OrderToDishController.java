@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import liga.restaurant.kitchen.entity.OrderToDish;
 import liga.restaurant.kitchen.service.OrderToDishService;
@@ -13,13 +15,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/kitchen/order-to-dish")
 @Tag(name = "Order-To-Dish API", description = "Связь заказов кухни с блюдами")
+@RequiredArgsConstructor
 public class OrderToDishController {
-
     private final OrderToDishService service;
-
-    public OrderToDishController(OrderToDishService service) {
-        this.service = service;
-    }
 
     @Operation(
             summary = "Получить все блюда по заказу",
@@ -57,7 +55,7 @@ public class OrderToDishController {
             @ApiResponse(responseCode = "400", description = "Ошибка входных данных")
     })
     @PostMapping
-    public void create(@RequestBody OrderToDish orderToDish) {
+    public void create(@Valid @RequestBody OrderToDish orderToDish) {
         service.create(orderToDish);
     }
 
@@ -70,7 +68,7 @@ public class OrderToDishController {
             @ApiResponse(responseCode = "404", description = "Связь не найдена")
     })
     @PutMapping
-    public void update(@RequestBody OrderToDish orderToDish) {
+    public void update(@Valid @RequestBody OrderToDish orderToDish) {
         service.update(orderToDish);
     }
 

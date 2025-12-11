@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import liga.restaurant.dto.KitchenOrderRequestDto;
 import liga.restaurant.dto.OrderStatusDto;
@@ -17,13 +18,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/waiter/orders")
 @Tag(name = "Waiter API", description = "Операции с заказами официантов")
+@RequiredArgsConstructor
 public class WaiterOrderController {
-
     private final WaiterOrderService service;
 
-    public WaiterOrderController(WaiterOrderService service) {
-        this.service = service;
-    }
     @Operation(
             summary = "Создать заказ официанта",
             description = "Создаёт новый заказ официанта вместе с позициями"

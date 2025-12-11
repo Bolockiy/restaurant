@@ -4,22 +4,18 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import liga.restaurant.waiter.entity.OrderPosition;
 import liga.restaurant.waiter.service.OrderPositionService;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/waiter/order-positions")
 @Tag(name = "Order Position API", description = "Позиции блюд в заказе официанта")
+@RequiredArgsConstructor
 public class OrderPositionController {
-
     private final OrderPositionService service;
-
-    public OrderPositionController(OrderPositionService service) {
-        this.service = service;
-    }
 
     @Operation(
             summary = "Создать позицию заказа",

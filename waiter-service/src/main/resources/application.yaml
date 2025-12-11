@@ -16,14 +16,6 @@ spring:
       hibernate:
         format_sql: true
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    health:
-      show-details: ALWAYS
   kafka:
     bootstrap-servers: localhost:9092
     producer:
@@ -34,12 +26,16 @@ management:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       group-id: waiter-group
       properties:
-        spring.json.trusted.packages: "ru.Liga.dto"
-        spring.json.value.default.type: "ru.Liga.dto.OrderStatusDto"
-logging:
-  level:
-    root: INFO
-    org.hibernate.SQL: WARN
-    ru.Liga.waiter: DEBUG
+        spring.json.trusted.packages: "liga.restaurant.dto"
+        spring.json.value.default.type: "liga.restaurant.dto.OrderStatusDto"
+
+app:
+  kafka:
+    topics:
+      waiter-to-kitchen: "waiter-to-kitchen"
+      kitchen-to-waiter: "kitchen-to-waiter"
+    groups:
+      waiter: "waiter-group"
+      kitchen: "kitchen-group"
 server:
   port: 8083

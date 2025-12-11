@@ -3,12 +3,10 @@ package liga.restaurant.kitchen.service;
 import org.springframework.stereotype.Service;
 import liga.restaurant.kitchen.entity.Dish;
 import liga.restaurant.kitchen.mapper.DishMapper;
-
 import java.util.List;
 
 @Service
 public class DishService {
-
     private final DishMapper dishMapper;
 
     public DishService(DishMapper dishMapper) {

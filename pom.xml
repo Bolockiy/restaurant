@@ -26,6 +26,7 @@
         <module>waiter-service</module>
         <module>kitchen-service</module>
         <module>migrations</module>
+        <module>exception</module>
     </modules>
     <scm>
 		<connection/>

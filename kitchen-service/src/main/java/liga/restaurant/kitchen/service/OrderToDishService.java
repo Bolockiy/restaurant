@@ -3,12 +3,10 @@ package liga.restaurant.kitchen.service;
 import org.springframework.stereotype.Service;
 import liga.restaurant.kitchen.entity.OrderToDish;
 import liga.restaurant.kitchen.mapper.OrderToDishMapper;
-
 import java.util.List;
 
 @Service
 public class OrderToDishService {
-
     private final OrderToDishMapper mapper;
 
     public OrderToDishService(OrderToDishMapper mapper) {

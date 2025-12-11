@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import liga.restaurant.waiter.entity.Menu;
 import liga.restaurant.waiter.service.MenuService;
@@ -12,13 +13,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/waiter/menu")
+@RequiredArgsConstructor
 public class MenuController {
-
     private final MenuService service;
-
-    public MenuController(MenuService service) {
-        this.service = service;
-    }
 
     @Operation (
             summary = "Создание меню",
@@ -49,8 +46,6 @@ public class MenuController {
         return service.findAll();
     }
 
-
-
     @Operation(
             summary = "Получить меню по ID",
             description = "Возвращает одно меню по его идентификатору"
@@ -66,7 +61,6 @@ public class MenuController {
                                @PathVariable Long id) {
         return service.findById(id);
     }
-
 
     @Operation(
             summary = "Удалить меню",

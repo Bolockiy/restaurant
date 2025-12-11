@@ -1,6 +1,8 @@
 package liga.restaurant.waiter.service;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -9,23 +11,17 @@ import liga.restaurant.dto.WaiterOrderDto;
 import liga.restaurant.waiter.entity.WaiterOrder;
 import liga.restaurant.waiter.kafka.KitchenKafkaProducer;
 import liga.restaurant.waiter.repository.WaiterOrderRepository;
-
+import ru.Liga.restaurant.BusinessException;
+import ru.Liga.restaurant.NotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class WaiterOrderService {
-
-    private static final Logger log = LoggerFactory.getLogger(WaiterOrderService.class);
-
     private final WaiterOrderRepository repo;
     private final KitchenKafkaProducer kafkaProducer;
-
-    public WaiterOrderService(WaiterOrderRepository repo,
-                              KitchenKafkaProducer kafkaProducer) {
-        this.repo = repo;
-        this.kafkaProducer = kafkaProducer;
-    }
 
     public WaiterOrder createOrder(WaiterOrder dto) {
         log.info("Создание нового заказа: tableNo={}, status={}", dto.getTableNo(), dto.getStatus());
@@ -66,7 +62,7 @@ public class WaiterOrderService {
                 })
                 .orElseThrow(() -> {
                     log.warn("Заказ не найден: id={}", id);
-                    return new IllegalArgumentException("Order not found with id " + id);
+                    return new NotFoundException("Order not found with id " + id);
                 });
     }
 
@@ -75,13 +71,12 @@ public class WaiterOrderService {
         repo.deleteById(id);
     }
 
-    @Transactional
     public void updateOrderStatus(Long waiterOrderNo, String status) {
         log.info("Обновление статуса заказа: id={}, newStatus={}", waiterOrderNo, status);
         WaiterOrder order = repo.findById(waiterOrderNo)
                 .orElseThrow(() -> {
                     log.warn("Заказ не найден для обновления статуса: id={}", waiterOrderNo);
-                    return new RuntimeException("Order not found: " + waiterOrderNo);
+                    return new NotFoundException("Order not found: " + waiterOrderNo);
                 });
 
         if (status.equals(order.getStatus())) {

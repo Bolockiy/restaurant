@@ -33,6 +33,11 @@
 
         <dependency>
             <groupId>ru.Liga</groupId>
+            <artifactId>exception</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>ru.Liga</groupId>
             <artifactId>common-dto</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

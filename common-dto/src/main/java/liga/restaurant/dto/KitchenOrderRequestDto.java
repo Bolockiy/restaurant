@@ -1,6 +1,8 @@
 package liga.restaurant.dto;
 
 import lombok.*;
+import jakarta.validation.constraints.NotNull;
+
 import java.util.List;
 
 /**
@@ -14,6 +16,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class KitchenOrderRequestDto {
+    @NotNull
     private Long waiterOrderNo;
-    private List<OrderToDishDto> dishes;
+
+    private List<@NotNull OrderToDishDto> dishes;
 }

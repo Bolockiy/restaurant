@@ -1,21 +1,23 @@
 package liga.restaurant.kitchen.Kafka;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import liga.restaurant.dto.OrderStatusDto;
+import org.springframework.beans.factory.annotation.Value;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class KitchenKafkaProducer {
-
     private final KafkaTemplate<String, OrderStatusDto> kafkaTemplate;
-    private final String topic = "kitchen-to-waiter";
 
-    public KitchenKafkaProducer(KafkaTemplate<String, OrderStatusDto> kafkaTemplate) {
-        this.kafkaTemplate = kafkaTemplate;
-    }
+    @Value("${app.kafka.topics.kitchen-to-waiter}")
+    private String topic;
 
     public void sendStatusToWaiter(OrderStatusDto dto) {
-        System.out.println("Sending status to waiter: " + dto.getWaiterOrderNo() + " -> " + dto.getStatus());
+        log.info("Sending status to waiter: orderNo={} -> status={}", dto.getWaiterOrderNo(), dto.getStatus());
         kafkaTemplate.send(topic, dto);
     }
 }

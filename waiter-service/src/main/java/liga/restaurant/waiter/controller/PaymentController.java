@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import liga.restaurant.waiter.entity.Payment;
 import liga.restaurant.waiter.service.PaymentService;
@@ -13,13 +14,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/waiter/payments")
 @Tag(name = "Payment API", description = "Управление оплатами заказов официанта")
+@RequiredArgsConstructor
 public class PaymentController {
-
     private final PaymentService service;
-
-    public PaymentController(PaymentService service) {
-        this.service = service;
-    }
 
     @Operation(
             summary = "Создать оплату",

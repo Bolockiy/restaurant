@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,13 +19,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/waiter/accounts")
 @Tag(name = "Waiter Accounts API", description = "Управление аккаунтами официантов")
+@RequiredArgsConstructor
 public class WaiterAccountController {
-
     private final WaiterAccountService waiterService;
-
-    public WaiterAccountController(WaiterAccountService waiterService) {
-        this.waiterService = waiterService;
-    }
 
     @Operation(
             summary = "Создать аккаунт официанта",

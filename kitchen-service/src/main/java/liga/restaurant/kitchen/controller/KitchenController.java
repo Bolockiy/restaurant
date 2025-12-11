@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import liga.restaurant.dto.KitchenOrderRequestDto;
 import liga.restaurant.kitchen.entity.KitchenOrder;
@@ -14,13 +16,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/kitchen/orders")
 @Tag(name = "Kitchen API", description = "Работа с заказами кухни")
-
+@RequiredArgsConstructor
 public class KitchenController {
-
     private final KitchenService kitchenService;
-    public KitchenController(KitchenService kitchenService) {
-        this.kitchenService = kitchenService;
-    }
 
     @Operation(
             summary = "Получить заказ кухни по ID",
@@ -59,8 +57,9 @@ public class KitchenController {
             @ApiResponse(responseCode = "200", description = "Заказ принят кухней"),
             @ApiResponse(responseCode = "400", description = "Ошибка в данных заказа")
     })
-    @PostMapping("/internal")
+    @PostMapping
     public void create(
+            @Valid
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "DTO заказа от официанта",
                     required = true
@@ -80,6 +79,7 @@ public class KitchenController {
     })
     @PostMapping("/{id}/ready")
     public void markReady(
+            @Valid
             @Parameter(description = "ID заказа кухни", example = "10")
             @PathVariable Long id
     ) {
@@ -115,6 +115,7 @@ public class KitchenController {
     })
     @PutMapping("/{id}")
     public void update(
+            @Valid
             @Parameter(description = "ID заказа кухни", example = "5")
             @PathVariable Long id,
 

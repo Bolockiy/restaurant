@@ -5,22 +5,20 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import liga.restaurant.kitchen.entity.Dish;
 import liga.restaurant.kitchen.service.DishService;
-
 import java.util.List;
+
 @RestController
 @RequestMapping("/kitchen/dishes")
 @Tag(name = "Kitchen Dishes API", description = "Работа с блюдами кухни")
 
+@RequiredArgsConstructor
 public class DishController {
-
     private final DishService dishService;
-
-    public DishController(DishService dishService) {
-        this.dishService = dishService;
-    }
 
     @Operation(
             summary = "Получить блюдо по ID",
@@ -61,6 +59,7 @@ public class DishController {
     })
     @PostMapping
     public void create(
+            @Valid
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Сущность блюда",
                     required = true
@@ -81,9 +80,9 @@ public class DishController {
     })
     @PutMapping("/{id}")
     public void update(
+            @Valid
             @Parameter(description = "ID блюда", example = "3")
             @PathVariable Long id,
-
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Обновлённые данные блюда",
                     required = true
@@ -110,4 +109,3 @@ public class DishController {
         dishService.delete(id);
     }
 }
-
