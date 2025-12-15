@@ -10,7 +10,7 @@ import java.time.OffsetDateTime;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "payment", schema = "waiter")
+@Table(name = "payment")
 @Getter
 @Setter
 @Schema(description = "Сущность оплаты заказа официанта")

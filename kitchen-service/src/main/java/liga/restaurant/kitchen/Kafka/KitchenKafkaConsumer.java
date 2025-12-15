@@ -23,7 +23,7 @@ public class KitchenKafkaConsumer {
                 dto.getWaiterOrderNo(),
                 dto.getDishes() != null ? dto.getDishes().size() : 0);
         if (kitchenService.processOrderFromWaiter(dto))
-            kitchenKafkaProducer.sendStatusToWaiter(new OrderStatusDto(dto.getWaiterOrderNo(), "READY"));
+            kitchenKafkaProducer.sendStatusToWaiter(new OrderStatusDto(dto.getWaiterOrderNo(), "COOKING"));
         else
             kitchenKafkaProducer.sendStatusToWaiter(new OrderStatusDto(dto.getWaiterOrderNo(), "FAILED"));
     }

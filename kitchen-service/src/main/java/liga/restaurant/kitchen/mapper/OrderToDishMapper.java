@@ -13,7 +13,7 @@ public interface OrderToDishMapper {
             kitchen_order_id AS kitchenOrderId,
             dish_id AS dishId,
             dishes_number AS dishesNumber
-        FROM kitchen.order_to_dish
+        FROM order_to_dish
         WHERE kitchen_order_id = #{orderId}
     """)
     List<OrderToDish> findByOrderId(Long orderId);
@@ -24,7 +24,7 @@ public interface OrderToDishMapper {
             kitchen_order_id AS kitchenOrderId,
             dish_id AS dishId,
             dishes_number AS dishesNumber
-        FROM kitchen.order_to_dish
+        FROM order_to_dish
         WHERE kitchen_order_id = #{kitchenOrderId}
           AND dish_id = #{dishId}
     """)
@@ -33,14 +33,14 @@ public interface OrderToDishMapper {
 
     // Вставка
     @Insert("""
-        INSERT INTO kitchen.order_to_dish(kitchen_order_id, dish_id, dishes_number)
+        INSERT INTO order_to_dish(kitchen_order_id, dish_id, dishes_number)
         VALUES (#{kitchenOrderId}, #{dishId}, #{dishesNumber})
     """)
     void insert(OrderToDish orderToDish);
 
     // Обновление количества
     @Update("""
-        UPDATE kitchen.order_to_dish 
+        UPDATE order_to_dish 
         SET dishes_number = #{dishesNumber}
         WHERE kitchen_order_id = #{kitchenOrderId}
           AND dish_id = #{dishId}
@@ -49,7 +49,7 @@ public interface OrderToDishMapper {
 
     // Удаление одного блюда из заказа
     @Delete("""
-        DELETE FROM kitchen.order_to_dish
+        DELETE FROM order_to_dish
         WHERE kitchen_order_id = #{kitchenOrderId}
           AND dish_id = #{dishId}
     """)
@@ -58,7 +58,7 @@ public interface OrderToDishMapper {
 
     // Удалить все блюда из заказа
     @Delete("""
-        DELETE FROM kitchen.order_to_dish
+        DELETE FROM order_to_dish
         WHERE kitchen_order_id = #{kitchenOrderId}
     """)
     void deleteByOrderId(Long kitchenOrderId);

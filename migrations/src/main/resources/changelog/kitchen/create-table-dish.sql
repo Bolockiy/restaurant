@@ -1,4 +1,4 @@
-CREATE TABLE kitchen.dish(
+CREATE TABLE dish(
 dish_id BIGSERIAL PRIMARY KEY,
 balance BIGINT NOT NULL,
 short_name VARCHAR NOT NULL,

@@ -13,19 +13,19 @@ spring:
 
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     consumer:
       group-id: kitchen-group
       auto-offset-reset: earliest
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        spring.json.trusted.packages: "ru.Liga.dto"
-        spring.json.value.default.type: "ru.Liga.dto.KitchenOrderRequestDto"
+        spring.json.trusted.packages: "liga.restaurant.dto"
+        spring.json.value.default.type: "liga.restaurant.dto.KitchenOrderRequestDto"
 app:
   kafka:
     topics:
+      waiter-to-kitchen: "waiter-to-kitchen"
       kitchen-to-waiter: "kitchen-to-waiter"
     groups:
       kitchen: "kitchen-group"

@@ -87,25 +87,6 @@ public class KitchenController {
     }
 
     @Operation(
-            summary = "Создать новый заказ кухни вручную",
-            description = "Используется для ручного создания заказа"
-    )
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Заказ успешно создан"),
-            @ApiResponse(responseCode = "400", description = "Ошибочные данные")
-    })
-    @PostMapping
-    public void receiveOrder(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Сущность заказа кухни",
-                    required = true
-            )
-            @RequestBody KitchenOrder kitchenOrder
-    ) {
-        kitchenService.create(kitchenOrder);
-    }
-
-    @Operation(
             summary = "Обновить заказ кухни",
             description = "Обновляет данные заказа кухни по ID"
     )

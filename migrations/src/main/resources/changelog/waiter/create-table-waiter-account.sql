@@ -1,4 +1,4 @@
-CREATE TABLE waiter.waiter_account (
+CREATE TABLE waiter_account (
 waiter_id BIGSERIAL PRIMARY KEY,
 name VARCHAR NOT NULL,
 sex VARCHAR NOT NULL,

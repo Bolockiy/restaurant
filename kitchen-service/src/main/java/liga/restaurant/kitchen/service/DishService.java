@@ -1,5 +1,8 @@
 package liga.restaurant.kitchen.service;
 
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Service;
 import liga.restaurant.kitchen.entity.Dish;
 import liga.restaurant.kitchen.mapper.DishMapper;

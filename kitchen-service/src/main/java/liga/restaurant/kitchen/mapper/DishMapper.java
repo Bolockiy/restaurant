@@ -8,21 +8,27 @@ import java.util.List;
 @Mapper
 public interface DishMapper {
 
-    @Select("SELECT dish_id, balance, short_name, dish_composition FROM kitchen.dish WHERE dish_id = #{id}")
+    @Select("SELECT dish_id, balance, short_name, dish_composition FROM dish WHERE dish_id = #{id}")
+    @Results({
+            @Result(property = "dishId", column = "dish_id"),
+            @Result(property = "balance", column = "balance"),
+            @Result(property = "name", column = "short_name"),
+            @Result(property = "dishComposition", column = "dish_composition")
+    })
     Dish findById(Long id);
 
-    @Select("SELECT dish_id, balance, short_name, dish_composition FROM kitchen.dish")
+    @Select("SELECT dish_id, balance, short_name, dish_composition FROM dish")
     List<Dish> findAll();
 
-    @Insert("INSERT INTO kitchen.dish(dish_id, balance, short_name, dish_composition) " +
+    @Insert("INSERT INTO dish(dish_id, balance, short_name, dish_composition) " +
             "VALUES (#{dishId}, #{balance}, #{shortName}, #{dishComposition})")
     @Options(useGeneratedKeys = true, keyProperty = "dishId")
     void insert(Dish dish);
 
-    @Update("UPDATE kitchen.dish SET balance=#{balance}, short_name=#{shortName}, dish_composition=#{dishComposition} " +
+    @Update("UPDATE dish SET balance=#{balance}, short_name=#{shortName}, dish_composition=#{dishComposition} " +
             "WHERE dish_id=#{dishId}")
     void update(Dish dish);
 
-    @Delete("DELETE FROM kitchen.dish WHERE dish_id=#{id}")
+    @Delete("DELETE FROM dish WHERE dish_id=#{id}")
     void delete(Long id);
 }

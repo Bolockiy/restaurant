@@ -1,6 +1,12 @@
 package liga.restaurant.waiter.service;
 
 import jakarta.transaction.Transactional;
+import liga.restaurant.dto.CreateWaiterOrderDto;
+import liga.restaurant.dto.WaiterAccountDto;
+import liga.restaurant.waiter.entity.Menu;
+import liga.restaurant.waiter.entity.OrderPosition;
+import liga.restaurant.waiter.entity.WaiterAccount;
+import liga.restaurant.waiter.repository.WaiterAccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -13,6 +19,9 @@ import liga.restaurant.waiter.kafka.KitchenKafkaProducer;
 import liga.restaurant.waiter.repository.WaiterOrderRepository;
 import ru.Liga.restaurant.BusinessException;
 import ru.Liga.restaurant.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,30 +31,53 @@ import java.util.stream.Collectors;
 public class WaiterOrderService {
     private final WaiterOrderRepository repo;
     private final KitchenKafkaProducer kafkaProducer;
+    private final WaiterAccountRepository waiterAccountRepository;
 
-    public WaiterOrder createOrder(WaiterOrder dto) {
-        log.info("Создание нового заказа: tableNo={}, status={}", dto.getTableNo(), dto.getStatus());
-        WaiterOrder saved = repo.save(dto);
-        log.debug("Заказ сохранён: id={}", saved.getId());
-        return saved;
+
+    @Transactional
+    public WaiterOrder createOrderKitchen(CreateWaiterOrderDto dto) {
+        log.info("Создание заказа официантом, tableNo={}", dto.getTableNo());
+        if (dto.getWaiterId() == null) {
+            throw new IllegalArgumentException("Waiter ID cannot be null");
+        }
+
+        WaiterAccount waiter = waiterAccountRepository.findById(dto.getWaiterId())
+                .orElseThrow(() -> new RuntimeException("Waiter not found: " + dto.getWaiterId()));
+
+        WaiterOrder order = new WaiterOrder();
+        order.setTableNo(dto.getTableNo());
+        order.setStatus("CREATED");
+        order.setCreateDttm(OffsetDateTime.now());
+        order.setWaiter(waiter);
+        WaiterOrder savedOrder = repo.save(order);
+
+        log.info("Заказ сохранён в waiter DB, id={}", savedOrder.getId());
+
+        // 4. Kafka DTO для кухни
+        KitchenOrderRequestDto kitchenDto =
+                new KitchenOrderRequestDto(
+                        savedOrder.getId(),
+                        dto.getDishes()
+                );
+
+        // 5. Отправляем в Kafka
+        kafkaProducer.sendOrderToKitchen(kitchenDto);
+
+        log.info("Заказ {} отправлен на кухню", savedOrder.getId());
+
+        return savedOrder;
     }
 
-    public void createOrderKitchen(KitchenOrderRequestDto dto) {
-        log.info("Отправка заказа на кухню: waiterOrderNo={}", dto.getWaiterOrderNo());
-        kafkaProducer.sendOrderToKitchen(dto);
-        log.debug("Заказ отправлен в Kafka: {}", dto);
-    }
+    public Page<WaiterOrderDto> findAll(Pageable pageable) {
+        log.debug("Получение всех заказов с пагинацией: page={}, size={}", pageable.getPageNumber(), pageable.getPageSize());
 
-    public List<WaiterOrderDto> findAll() {
-        log.debug("Получение всех заказов");
-        return repo.findAll().stream()
+        return repo.findAll(pageable)
                 .map(o -> new WaiterOrderDto(
                         o.getId(),
                         o.getStatus(),
                         o.getTableNo(),
                         o.getCreateDttm()
-                ))
-                .collect(Collectors.toList());
+                ));
     }
 
     public WaiterOrderDto findById(Long id) {

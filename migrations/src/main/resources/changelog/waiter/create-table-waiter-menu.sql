@@ -1,4 +1,4 @@
-CREATE TABLE waiter.menu (
+CREATE TABLE menu (
 id BIGSERIAL PRIMARY KEY,
 dish_name VARCHAR NOT NULL,
 dish_cost NUMERIC NOT NULL

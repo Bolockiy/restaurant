@@ -6,7 +6,7 @@ import lombok.Setter;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "menu", schema = "waiter")
+@Table(name = "menu")
 @Getter
 @Setter
 public class Menu {

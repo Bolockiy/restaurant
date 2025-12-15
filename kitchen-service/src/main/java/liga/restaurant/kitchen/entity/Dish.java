@@ -14,9 +14,9 @@ public class Dish {
     @Schema(description = "Название блюда", example = "Пицца Маргарита")
     private String name;
 
-    @NotNull(message = "price must not be null")
-    @Schema(description = "Цена блюда", example = "550")
-    private Integer price;
+    @NotNull(message = "composition must not be null")
+    @Schema(description = "Состав блюда", example = "Flour, Tomato, Cheese")
+    private String dishComposition;
 
     @NotNull(message = "balance must not be null")
     @Schema(description = "Остаток на складе", example = "20")

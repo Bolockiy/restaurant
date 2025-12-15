@@ -6,10 +6,10 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
 
     <!-- Waiter DB -->
-    <include file="changelog/waiter/create-schema.sql"/>
     <include file="changelog/waiter/create-table-waiter-account.sql"/>
     <include file="changelog/waiter/create-table-waiter-order.sql"/>
     <include file="changelog/waiter/create-table-waiter-payment.sql"/>
     <include file="changelog/waiter/create-table-waiter-menu.sql"/>
     <include file="changelog/waiter/create-table-waiter-order-positions.sql"/>
+    <include file="changelog/waiter/create-test-waiter.sql"/>
 </databaseChangeLog>

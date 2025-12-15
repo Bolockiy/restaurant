@@ -11,7 +11,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "waiter_account", schema = "waiter")
+@Table(name = "waiter_account")
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -43,9 +43,4 @@ public class WaiterAccount {
             example = "2024-01-15T10:30:00+03:00"
     )
     private OffsetDateTime employmentDate;
-
-    @OneToMany(mappedBy = "waiter", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    @Schema(description = "Список заказов, оформленных этим официантом")
-    private List<WaiterOrder> orders;
 }

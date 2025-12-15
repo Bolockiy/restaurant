@@ -13,7 +13,7 @@ public interface KitchenOrderMapper {
             waiter_order_no  AS waiterOrderNo,
             status,
             create_dttm      AS createDttm
-        FROM kitchen.kitchen_order
+        FROM kitchen_order
         WHERE kitchen_order_id = #{id}
     """)
     KitchenOrder findById(Long id);
@@ -24,19 +24,19 @@ public interface KitchenOrderMapper {
             waiter_order_no  AS waiterOrderNo,
             status,
             create_dttm      AS createDttm
-        FROM kitchen.kitchen_order
+        FROM kitchen_order
     """)
     List<KitchenOrder> findAll();
 
     @Insert("""
-        INSERT INTO kitchen.kitchen_order(waiter_order_no, status, create_dttm)
+        INSERT INTO kitchen_order(waiter_order_no, status, create_dttm)
         VALUES (#{waiterOrderNo}, #{status}, #{createDttm})
     """)
     @Options(useGeneratedKeys = true, keyProperty = "kitchenOrderId")
     void insert(KitchenOrder kitchenOrder);
 
     @Update("""
-        UPDATE kitchen.kitchen_order 
+        UPDATE kitchen_order 
         SET waiter_order_no=#{waiterOrderNo}, 
             status=#{status}, 
             create_dttm=#{createDttm}
@@ -44,6 +44,6 @@ public interface KitchenOrderMapper {
     """)
     void update(KitchenOrder kitchenOrder);
 
-    @Delete("DELETE FROM kitchen.kitchen_order WHERE kitchen_order_id=#{id}")
+    @Delete("DELETE FROM kitchen_order WHERE kitchen_order_id=#{id}")
     void delete(Long id);
 }

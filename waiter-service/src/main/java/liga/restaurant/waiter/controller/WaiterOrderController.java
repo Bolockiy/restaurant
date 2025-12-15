@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import liga.restaurant.dto.CreateWaiterOrderDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import liga.restaurant.dto.KitchenOrderRequestDto;
@@ -12,7 +13,9 @@ import liga.restaurant.dto.OrderStatusDto;
 import liga.restaurant.dto.WaiterOrderDto;
 import liga.restaurant.waiter.entity.WaiterOrder;
 import liga.restaurant.waiter.service.WaiterOrderService;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @RestController
@@ -36,28 +39,9 @@ public class WaiterOrderController {
                     description = "Сущность заказа",
                     required = true
             )
-            @RequestBody WaiterOrder order
+            @RequestBody CreateWaiterOrderDto order
     ) {
-        return service.createOrder(order);
-    }
-
-    @Operation(
-            summary = "Создать заказ для кухни",
-            description = "Передаёт заказ кухни напрямую через Kafka"
-    )
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Заказ отправлен на кухню"),
-            @ApiResponse(responseCode = "400", description = "Ошибка в данных заказа")
-    })
-    @PostMapping("/order")
-    public void createKitchen(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "DTO заказа для кухни",
-                    required = true
-            )
-            @RequestBody KitchenOrderRequestDto order
-    ) {
-        service.createOrderKitchen(order);
+        return service.createOrderKitchen(order);
     }
     @Operation(
             summary = "Получить все заказы официантов",
@@ -67,10 +51,11 @@ public class WaiterOrderController {
             @ApiResponse(responseCode = "200", description = "Список заказов получен")
     })
     @GetMapping
-    public List<WaiterOrderDto> getAllOrders() {
-        return service.findAll();
+    public Page<WaiterOrderDto> getOrders(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return service.findAll(PageRequest.of(page, size));
     }
-
     @Operation(
             summary = "Получить заказ официанта по ID",
             description = "Возвращает заказ официанта с позициями"

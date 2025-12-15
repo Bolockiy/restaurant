@@ -11,8 +11,8 @@ import liga.restaurant.kitchen.Kafka.KitchenKafkaProducer;
 import liga.restaurant.kitchen.entity.Dish;
 import liga.restaurant.kitchen.entity.KitchenOrder;
 import liga.restaurant.kitchen.entity.OrderToDish;
-//import ru.Liga.restaurant.NotFoundException;
-//import ru.Liga.restaurant.BusinessException;
+import ru.Liga.restaurant.NotFoundException;
+import ru.Liga.restaurant.BusinessException;
 import liga.restaurant.kitchen.mapper.KitchenOrderMapper;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -45,12 +45,12 @@ public class KitchenService {
         log.info("Processing order from waiter: waiterOrderNo={}", dto.getWaiterOrderNo());
         if (!checkProductsAvailability(dto)) {
             log.warn("Order cannot be processed due to insufficient products: waiterOrderNo={}", dto.getWaiterOrderNo());
-            return false;
+            throw new BusinessException("Недостаточно продуктов для заказа: " + dto.getWaiterOrderNo());
         }
 
         KitchenOrder order = new KitchenOrder();
         order.setWaiterOrderNo(dto.getWaiterOrderNo());
-        order.setStatus("RECEIVED");
+        order.setStatus("CREATED");
         order.setCreateDttm(OffsetDateTime.now());
 
         kitchenOrderMapper.insert(order);
@@ -74,6 +74,7 @@ public class KitchenService {
         KitchenOrder order = kitchenOrderMapper.findById(kitchenOrderId);
         if ("READY".equalsIgnoreCase(order.getStatus())) {
             log.warn("Order already READY: kitchenOrderId={}", kitchenOrderId);
+            throw new BusinessException("Заказ уже помечен как READY: " + kitchenOrderId);
             //throw new BusinessException("Order is already READY");
         }
         order.setStatus("READY");
@@ -88,7 +89,8 @@ public class KitchenService {
     public KitchenOrder getById(Long id) {
         log.info("Fetching kitchen order by id={}", id);
         KitchenOrder order = kitchenOrderMapper.findById(id);
-        if (order == null) log.warn("Kitchen order not found: id={}", id);
+        if (order == null)
+            log.warn("Kitchen order not found: id={}", id);
         else log.debug("Found kitchen order: {}", order);
         return order;
     }

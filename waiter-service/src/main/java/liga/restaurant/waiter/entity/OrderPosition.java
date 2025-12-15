@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "order_positions", schema = "waiter")
+@Table(name = "order_positions")
 @Getter
 @Setter
 @Schema(description = "Позиция заказа официанта (конкретное блюдо в заказе)")

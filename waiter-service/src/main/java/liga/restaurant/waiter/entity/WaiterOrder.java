@@ -12,7 +12,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "waiter_order", schema = "waiter")
+@Table(name = "waiter_order")
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -20,12 +20,7 @@ import java.util.List;
 public class WaiterOrder {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "waiter_order_seq")
-    @SequenceGenerator(
-            name = "waiter_order_seq",
-            sequenceName = "waiter.waiter_order_order_no_seq",
-            allocationSize = 1
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_no")
     @Schema(description = "Уникальный номер заказа", example = "101")
     private Long id;
@@ -49,13 +44,4 @@ public class WaiterOrder {
     @Schema(description = "Официант, оформивший заказ")
     private WaiterAccount waiter;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    @Schema(description = "Позиции заказа")
-    private List<OrderPosition> positions;
-
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    @Schema(description = "Платёж, связанный с заказом")
-    private Payment payment;
 }
