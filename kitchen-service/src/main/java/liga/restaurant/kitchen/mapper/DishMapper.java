@@ -31,4 +31,26 @@ public interface DishMapper {
 
     @Delete("DELETE FROM dish WHERE dish_id=#{id}")
     void delete(Long id);
+
+    @Select("""
+        SELECT dish_id, balance, short_name, dish_composition
+        FROM dish
+        WHERE dish_id = #{id}
+        FOR UPDATE
+    """)
+    @Results({
+            @Result(property = "dishId", column = "dish_id"),
+            @Result(property = "balance", column = "balance"),
+            @Result(property = "name", column = "short_name"),
+            @Result(property = "dishComposition", column = "dish_composition")
+    })
+    Dish findByIdForUpdate(Long id);
+
+    @Update("""
+        UPDATE dish
+        SET balance = balance - #{amount}
+        WHERE dish_id = #{dishId}
+    """)
+    void decreaseBalance(@Param("dishId") Long dishId,
+                         @Param("amount") Long amount);
 }

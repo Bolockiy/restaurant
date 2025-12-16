@@ -1,14 +1,20 @@
 package liga.restaurant.kitchen.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Service;
 import liga.restaurant.kitchen.entity.Dish;
 import liga.restaurant.kitchen.mapper.DishMapper;
+import org.springframework.transaction.annotation.Transactional;
+import ru.Liga.restaurant.BusinessException;
+import ru.Liga.restaurant.NotFoundException;
+
 import java.util.List;
 
 @Service
+@Slf4j
 public class DishService {
     private final DishMapper dishMapper;
 
@@ -34,5 +40,36 @@ public class DishService {
 
     public void delete(Long id) {
         dishMapper.delete(id);
+    }
+
+    /**
+     * Помечает заказ кухни как READY (готов).
+     * После этого отправляет статус официанту через Kafka.
+     *
+     * @param dishId идентификатор блюда
+     * @param amount кол-во блюд
+     *
+     * @throws BusinessException если недостаточно блюда
+     * @throws NotFoundException если блюдо не найдено
+     */
+
+    @Transactional
+    public void decreaseBalance(Long dishId, Long amount) {
+        Dish dish = dishMapper.findByIdForUpdate(dishId);
+
+        if (dish == null) {
+            throw new NotFoundException("Блюдо не найдено: " + dishId);
+        }
+
+        if (dish.getBalance() < amount) {
+            throw new BusinessException(
+                    "Недостаточно блюда '" + dish.getName() +
+                            "'. Остаток=" + dish.getBalance() +
+                            ", требуется=" + amount
+            );
+        }
+        dishMapper.decreaseBalance(dishId, amount);
+        log.info("Balance decreased: dishId={}, amount={}, newBalance={}",
+                dishId, amount, dish.getBalance() - amount);
     }
 }

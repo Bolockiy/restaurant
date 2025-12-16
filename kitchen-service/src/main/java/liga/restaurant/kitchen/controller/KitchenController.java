@@ -6,7 +6,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import liga.restaurant.dto.ApiErrorResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import liga.restaurant.dto.KitchenOrderRequestDto;
 import liga.restaurant.kitchen.entity.KitchenOrder;
@@ -78,12 +80,12 @@ public class KitchenController {
             @ApiResponse(responseCode = "404", description = "Заказ не найден")
     })
     @PostMapping("/{id}/ready")
-    public void markReady(
-            @Valid
+    public ResponseEntity<ApiErrorResponse> markReady(
             @Parameter(description = "ID заказа кухни", example = "10")
             @PathVariable Long id
     ) {
         kitchenService.markOrderReady(id);
+        return ResponseEntity.ok(new ApiErrorResponse(200, "Заказ успешно помечен как READY: " + id));
     }
 
     @Operation(

@@ -21,36 +21,33 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class KitchenService {
+
     private final KitchenOrderMapper kitchenOrderMapper;
     private final OrderToDishService orderToDishService;
     private final KitchenKafkaProducer kitchenKafkaProducer;
     private final DishService dishService;
 
-    public boolean checkProductsAvailability(KitchenOrderRequestDto dto) {
-        log.info("Checking product availability for waiterOrderNo={}", dto.getWaiterOrderNo());
-        for (OrderToDishDto dish : dto.getDishes()) {
-            Dish d = dishService.getById(dish.getDishId());
-            log.debug("Dish {} has balance={}, requested={}", d.getName(), d.getBalance(), dish.getDishesNumber());
-            if (d.getBalance() < dish.getDishesNumber()) {
-                log.warn("Insufficient balance for dish: {}. Order cannot be processed.", d.getName());
-                return false;
-            }
-        }
-        log.info("All products available for order: waiterOrderNo={}", dto.getWaiterOrderNo());
-        return true;
-    }
-
+    /**
+     * Обрабатывает заказ, поступивший от waiter-сервиса.
+     * Метод выполняется в одной транзакции.
+     *
+     * @param dto заказ от официанта (номер заказа и блюда)
+     * @return true — если заказ успешно принят кухней
+     *
+     * @throws BusinessException если недостаточно продуктов
+     * @throws NotFoundException если блюдо не найдено
+     */
     @Transactional
     public boolean processOrderFromWaiter(KitchenOrderRequestDto dto) {
         log.info("Processing order from waiter: waiterOrderNo={}", dto.getWaiterOrderNo());
-        if (!checkProductsAvailability(dto)) {
-            log.warn("Order cannot be processed due to insufficient products: waiterOrderNo={}", dto.getWaiterOrderNo());
-            throw new BusinessException("Недостаточно продуктов для заказа: " + dto.getWaiterOrderNo());
+
+        for (OrderToDishDto d : dto.getDishes()) {
+            dishService.decreaseBalance(d.getDishId(), d.getDishesNumber());
         }
 
         KitchenOrder order = new KitchenOrder();
         order.setWaiterOrderNo(dto.getWaiterOrderNo());
-        order.setStatus("CREATED");
+        order.setStatus("COOKING");
         order.setCreateDttm(OffsetDateTime.now());
 
         kitchenOrderMapper.insert(order);
@@ -62,63 +59,125 @@ public class KitchenService {
             otd.setKitchenOrderId(kitchenOrderId);
             otd.setDishId(d.getDishId());
             otd.setDishesNumber(d.getDishesNumber());
+
             orderToDishService.create(otd);
-            log.debug("Created OrderToDish: kitchenOrderId={}, dishId={}, number={}",
-                    kitchenOrderId, d.getDishId(), d.getDishesNumber());
+
+            log.debug(
+                    "Created OrderToDish: kitchenOrderId={}, dishId={}, number={}",
+                    kitchenOrderId,
+                    d.getDishId(),
+                    d.getDishesNumber()
+            );
         }
+
         return true;
     }
 
+    /**
+     * Помечает заказ кухни как READY (готов).
+     * После этого отправляет статус официанту через Kafka.
+     *
+     * @param kitchenOrderId идентификатор заказа кухни
+     *
+     * @throws BusinessException если заказ уже имеет статус READY
+     * @throws NotFoundException если заказ не найден
+     */
     public void markOrderReady(Long kitchenOrderId) {
         log.info("Marking order as READY: kitchenOrderId={}", kitchenOrderId);
+
         KitchenOrder order = kitchenOrderMapper.findById(kitchenOrderId);
+
+        if (order == null) {
+            log.warn("Kitchen order not found: kitchenOrderId={}", kitchenOrderId);
+            throw new NotFoundException("Заказ кухни не найден: " + kitchenOrderId);
+        }
+
         if ("READY".equalsIgnoreCase(order.getStatus())) {
             log.warn("Order already READY: kitchenOrderId={}", kitchenOrderId);
             throw new BusinessException("Заказ уже помечен как READY: " + kitchenOrderId);
-            //throw new BusinessException("Order is already READY");
         }
+
         order.setStatus("READY");
         kitchenOrderMapper.update(order);
         log.info("Order marked as READY: kitchenOrderId={}", kitchenOrderId);
 
         OrderStatusDto dto = new OrderStatusDto(order.getWaiterOrderNo(), "READY");
         kitchenKafkaProducer.sendStatusToWaiter(dto);
+
         log.debug("Sent order status to waiter: {}", dto);
     }
 
+    /**
+     * Возвращает заказ кухни по его идентификатору.
+     *
+     * @param id идентификатор заказа кухни
+     * @return заказ кухни
+     *
+     * @throws NotFoundException если заказ не найден
+     */
     public KitchenOrder getById(Long id) {
         log.info("Fetching kitchen order by id={}", id);
+
         KitchenOrder order = kitchenOrderMapper.findById(id);
-        if (order == null)
+        if (order == null) {
             log.warn("Kitchen order not found: id={}", id);
-        else log.debug("Found kitchen order: {}", order);
+            throw new NotFoundException("Заказ кухни не найден: " + id);
+        }
+
+        log.debug("Found kitchen order: {}", order);
         return order;
     }
 
+    /**
+     * Возвращает список всех заказов кухни.
+     *
+     * @return список заказов кухни
+     */
     public List<KitchenOrder> getAll() {
         log.info("Fetching all kitchen orders");
+
         List<KitchenOrder> orders = kitchenOrderMapper.findAll();
         log.debug("Found {} kitchen orders", orders.size());
+
         return orders;
     }
-
+    /**
+     * Создаёт новый заказ кухни вручную.
+     * Используется для административных или тестовых целей.
+     *
+     * @param kitchenOrder заказ кухни
+     */
     public void create(KitchenOrder kitchenOrder) {
         kitchenOrder.setStatus("NEW");
         kitchenOrder.setCreateDttm(OffsetDateTime.now());
+
         kitchenOrderMapper.insert(kitchenOrder);
         log.info("Created new kitchen order: kitchenOrderId={}", kitchenOrder.getKitchenOrderId());
     }
 
+    /**
+     * Обновляет заказ кухни.
+     *
+     * @param kitchenOrder заказ кухни с обновлёнными данными
+     */
     public void update(KitchenOrder kitchenOrder) {
         kitchenOrderMapper.update(kitchenOrder);
         log.info("Updated kitchen order: kitchenOrderId={}", kitchenOrder.getKitchenOrderId());
     }
 
+    /**
+     * Удаляет заказ кухни и все связанные с ним блюда.
+     * Выполняется в одной транзакции.
+     *
+     * @param id идентификатор заказа кухни
+     */
     @Transactional
     public void delete(Long id) {
         log.info("Deleting kitchen order: kitchenOrderId={}", id);
+
         orderToDishService.deleteByOrderId(id);
         kitchenOrderMapper.delete(id);
+
         log.debug("Deleted kitchen order and associated dishes: kitchenOrderId={}", id);
     }
 }

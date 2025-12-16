@@ -8,6 +8,11 @@ import liga.restaurant.dto.KitchenOrderRequestDto;
 import liga.restaurant.dto.OrderStatusDto;
 import liga.restaurant.kitchen.service.KitchenService;
 
+/**
+ * Kafka consumer кухни.
+ * Получает заказы от waiter-сервиса из Kafka,
+ * инициирует их обработку и отправляет статус обратно официанту.
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j

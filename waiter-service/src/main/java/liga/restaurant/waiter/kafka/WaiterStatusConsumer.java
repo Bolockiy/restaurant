@@ -9,10 +9,15 @@ import org.springframework.stereotype.Service;
 import liga.restaurant.dto.OrderStatusDto;
 import liga.restaurant.waiter.service.WaiterOrderService;
 
+/**
+ * Kafka consumer waiter
+ * Используется для принятия и обновления статуса блюда от кухни
+ * из kitchen-сервиса в waiter-сервис.
+ */
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class KitchenStatusConsumer {
+public class WaiterStatusConsumer {
     private final WaiterOrderService waiterOrderService;
 
     @KafkaListener(

@@ -6,11 +6,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import liga.restaurant.dto.KitchenOrderRequestDto;
-
+/**
+ * Kafka producer waiter
+ * Используется для отправки заказов
+ * из waiter-сервиса в kitchen-сервис.
+ */
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class KitchenKafkaProducer {
+public class WaiterKafkaProducer {
     private final KafkaTemplate<String, KitchenOrderRequestDto> kafkaTemplate;
     @Value("${app.kafka.topics.waiter-to-kitchen}")
     private String topic;

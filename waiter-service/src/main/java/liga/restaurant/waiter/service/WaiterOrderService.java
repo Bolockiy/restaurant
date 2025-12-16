@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import liga.restaurant.dto.KitchenOrderRequestDto;
 import liga.restaurant.dto.WaiterOrderDto;
 import liga.restaurant.waiter.entity.WaiterOrder;
-import liga.restaurant.waiter.kafka.KitchenKafkaProducer;
+import liga.restaurant.waiter.kafka.WaiterKafkaProducer;
 import liga.restaurant.waiter.repository.WaiterOrderRepository;
 import ru.Liga.restaurant.BusinessException;
 import ru.Liga.restaurant.NotFoundException;
@@ -30,10 +30,15 @@ import java.util.stream.Collectors;
 @Slf4j
 public class WaiterOrderService {
     private final WaiterOrderRepository repo;
-    private final KitchenKafkaProducer kafkaProducer;
+    private final WaiterKafkaProducer kafkaProducer;
     private final WaiterAccountRepository waiterAccountRepository;
 
-
+    /**
+     * Создаёт заказ официанта и отправляет его на кухню.
+     *
+     * @param dto DTO создания заказа
+     * @return сохранённый заказ официанта
+     */
     @Transactional
     public WaiterOrder createOrderKitchen(CreateWaiterOrderDto dto) {
         log.info("Создание заказа официантом, tableNo={}", dto.getTableNo());
@@ -53,21 +58,24 @@ public class WaiterOrderService {
 
         log.info("Заказ сохранён в waiter DB, id={}", savedOrder.getId());
 
-        // 4. Kafka DTO для кухни
         KitchenOrderRequestDto kitchenDto =
                 new KitchenOrderRequestDto(
                         savedOrder.getId(),
                         dto.getDishes()
                 );
 
-        // 5. Отправляем в Kafka
         kafkaProducer.sendOrderToKitchen(kitchenDto);
 
         log.info("Заказ {} отправлен на кухню", savedOrder.getId());
 
         return savedOrder;
     }
-
+    /**
+     * Возвращает список заказов официанта с пагинацией.
+     *
+     * @param pageable параметры пагинации (page, size, sort)
+     * @return страница заказов официанта
+     */
     public Page<WaiterOrderDto> findAll(Pageable pageable) {
         log.debug("Получение всех заказов с пагинацией: page={}, size={}", pageable.getPageNumber(), pageable.getPageSize());
 
@@ -79,7 +87,13 @@ public class WaiterOrderService {
                         o.getCreateDttm()
                 ));
     }
-
+    /**
+     * Получает заказ официанта по идентификатору.
+     *
+     * @param id идентификатор заказа
+     * @return DTO заказа официанта
+     * @throws NotFoundException если заказ не найден
+     */
     public WaiterOrderDto findById(Long id) {
         log.debug("Получение заказа по id={}", id);
         return repo.findById(id)
@@ -97,12 +111,22 @@ public class WaiterOrderService {
                     return new NotFoundException("Order not found with id " + id);
                 });
     }
-
+    /**
+     * Удаляет заказ официанта по идентификатору.
+     *
+     * @param id идентификатор заказа
+     */
     public void delete(Long id) {
         log.info("Удаление заказа: id={}", id);
         repo.deleteById(id);
     }
-
+    /**
+     * Обновляет статус заказа официанта.
+     * Используется при получении статусов из kitchen-сервиса.
+     *
+     * @param waiterOrderNo идентификатор заказа официанта
+     * @param status новый статус заказа
+     */
     public void updateOrderStatus(Long waiterOrderNo, String status) {
         log.info("Обновление статуса заказа: id={}, newStatus={}", waiterOrderNo, status);
         WaiterOrder order = repo.findById(waiterOrderNo)

@@ -7,6 +7,11 @@ import org.springframework.stereotype.Service;
 import liga.restaurant.dto.OrderStatusDto;
 import org.springframework.beans.factory.annotation.Value;
 
+/**
+ * Kafka producer кухни.
+ * Используется для отправки статусов заказов
+ * из kitchen-сервиса в waiter-сервис.
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
