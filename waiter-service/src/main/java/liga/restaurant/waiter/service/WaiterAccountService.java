@@ -15,23 +15,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class WaiterAccountService {
 
-    private WaiterAccount toEntity(WaiterAccountDto dto) {
-        WaiterAccount entity = new WaiterAccount();
-        entity.setName(dto.getName());
-        entity.setSex(dto.getSex());
-        entity.setEmploymentDate(dto.getEmploymentDate());
-        return entity;
-    }
-
-    private WaiterAccountDto toDto(WaiterAccount entity) {
-        return new WaiterAccountDto(
-                entity.getId(),
-                entity.getName(),
-                entity.getSex(),
-                entity.getEmploymentDate()
-        );
-    }
-
     public WaiterAccountDto save(WaiterAccountDto dto) {
         log.info("Saving new waiter account: name={}, sex={}, employmentDate={}", dto.getName(), dto.getSex(), dto.getEmploymentDate());
         WaiterAccount saved = repo.save(toEntity(dto));
@@ -101,4 +84,20 @@ public class WaiterAccountService {
     }
 
     private final WaiterAccountRepository repo;
+    private WaiterAccount toEntity(WaiterAccountDto dto) {
+        WaiterAccount entity = new WaiterAccount();
+        entity.setName(dto.getName());
+        entity.setSex(dto.getSex());
+        entity.setEmploymentDate(dto.getEmploymentDate());
+        return entity;
+    }
+
+    private WaiterAccountDto toDto(WaiterAccount entity) {
+        return new WaiterAccountDto(
+                entity.getId(),
+                entity.getName(),
+                entity.getSex(),
+                entity.getEmploymentDate()
+        );
+    }
 }
