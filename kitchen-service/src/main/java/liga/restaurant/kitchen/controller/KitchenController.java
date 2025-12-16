@@ -46,8 +46,11 @@ public class KitchenController {
             @ApiResponse(responseCode = "200", description = "Список заказов получен")
     })
     @GetMapping
-    public List<KitchenOrder> getAll() {
-        return kitchenService.getAll();
+    public List<KitchenOrder> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return kitchenService.getAll(page, size);
     }
 
     @Operation(

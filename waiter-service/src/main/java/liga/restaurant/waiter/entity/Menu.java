@@ -12,12 +12,7 @@ import java.math.BigDecimal;
 public class Menu {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "menu_id_seq")
-    @SequenceGenerator(
-            name = "menu_id_seq",
-            sequenceName = "waiter.menu_id_seq",
-            allocationSize = 1
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "dish_name", nullable = false)

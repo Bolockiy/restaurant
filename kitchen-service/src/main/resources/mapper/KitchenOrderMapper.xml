@@ -24,6 +24,9 @@
         status,
         create_dttm      AS createDttm
         FROM kitchen_order
+        ORDER BY kitchen_order_id DESC
+        LIMIT #{limit}
+        OFFSET #{offset}
     </select>
 
     <!-- Вставка нового заказа -->

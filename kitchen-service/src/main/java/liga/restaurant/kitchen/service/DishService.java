@@ -41,19 +41,7 @@ public class DishService {
         dishMapper.delete(id);
     }
 
-    /**
-     * Помечает заказ кухни как READY (готов).
-     * После этого отправляет статус официанту через Kafka.
-     *
-     * @param dishId идентификатор блюда
-     * @param amount кол-во блюд
-     *
-     * @throws BusinessException если недостаточно блюда
-     * @throws NotFoundException если блюдо не найдено
-     */
-
-    @Transactional
-    public void decreaseBalance(Long dishId, Long amount) {
+    public void checkAvailability(Long dishId, Long amount) {
         Dish dish = dishMapper.findByIdForUpdate(dishId);
 
         if (dish == null) {
@@ -67,9 +55,24 @@ public class DishService {
                             ", требуется=" + amount
             );
         }
+    }
+
+    /**
+     * Помечает заказ кухни как READY (готов).
+     * После этого отправляет статус официанту через Kafka.
+     *
+     * @param dishId идентификатор блюда
+     * @param amount кол-во блюд
+     *
+     * @throws BusinessException если недостаточно блюда
+     * @throws NotFoundException если блюдо не найдено
+     */
+
+    @Transactional
+    public void decreaseBalance(Long dishId, Long amount) {
         dishMapper.decreaseBalance(dishId, amount);
-        log.info("Balance decreased: dishId={}, amount={}, newBalance={}",
-                dishId, amount, dish.getBalance() - amount);
+        log.info("Balance decreased: dishId={}, amount={}",
+                dishId, amount);
     }
     private final DishMapper dishMapper;
 }

@@ -26,23 +26,9 @@ public class OrderToDishController {
             @ApiResponse(responseCode = "200", description = "Список найден"),
             @ApiResponse(responseCode = "404", description = "Заказ не найден")
     })
-    @GetMapping("/order/{orderId}")
+    @GetMapping("/{orderId}")
     public List<OrderToDish> getByOrderId(@PathVariable Long orderId) {
         return service.getByOrderId(orderId);
-    }
-
-    @Operation(
-            summary = "Получить конкретное блюдо в заказе",
-            description = "Возвращает конкретную позицию блюда для заказа кухни"
-    )
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Связь найдена"),
-            @ApiResponse(responseCode = "404", description = "Связь не найдена")
-    })
-    @GetMapping("/{orderId}/{dishId}")
-    public OrderToDish getOne(@PathVariable Long orderId,
-                              @PathVariable Long dishId) {
-        return service.getOne(orderId, dishId);
     }
 
     @Operation(
@@ -83,19 +69,6 @@ public class OrderToDishController {
     public void delete(@PathVariable Long orderId,
                        @PathVariable Long dishId) {
         service.delete(orderId, dishId);
-    }
-
-    @Operation(
-            summary = "Удалить все блюда из заказа",
-            description = "Полностью очищает заказ от всех блюд"
-    )
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Все блюда удалены"),
-            @ApiResponse(responseCode = "404", description = "Заказ не найден")
-    })
-    @DeleteMapping("/order/{orderId}")
-    public void deleteByOrder(@PathVariable Long orderId) {
-        service.deleteByOrderId(orderId);
     }
 
     private final OrderToDishService service;

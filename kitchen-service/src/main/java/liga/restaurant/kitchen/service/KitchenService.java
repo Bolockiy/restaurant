@@ -21,6 +21,7 @@ import liga.restaurant.kitchen.mapper.KitchenOrderMapper;
 @RequiredArgsConstructor
 @Slf4j
 public class KitchenService {
+
     /**
      * Обрабатывает заказ, поступивший от waiter-сервиса.
      * Метод выполняется в одной транзакции.
@@ -35,6 +36,9 @@ public class KitchenService {
     public boolean processOrderFromWaiter(KitchenOrderRequestDto dto) {
         log.info("Processing order from waiter: waiterOrderNo={}", dto.getWaiterOrderNo());
 
+        for (OrderToDishDto d : dto.getDishes()) {
+            dishService.checkAvailability(d.getDishId(), d.getDishesNumber());
+        }
         for (OrderToDishDto d : dto.getDishes()) {
             dishService.decreaseBalance(d.getDishId(), d.getDishesNumber());
         }
@@ -127,26 +131,15 @@ public class KitchenService {
      *
      * @return список заказов кухни
      */
-    public List<KitchenOrder> getAll() {
-        log.info("Fetching all kitchen orders");
+    public List<KitchenOrder> getAll(int page, int size) {
+        log.info("Fetching kitchen orders: page={}, size={}", page, size);
 
-        List<KitchenOrder> orders = kitchenOrderMapper.findAll();
+        int offset = page * size;
+
+        List<KitchenOrder> orders = kitchenOrderMapper.findAll(size, offset);
         log.debug("Found {} kitchen orders", orders.size());
 
         return orders;
-    }
-    /**
-     * Создаёт новый заказ кухни вручную.
-     * Используется для административных или тестовых целей.
-     *
-     * @param kitchenOrder заказ кухни
-     */
-    public void create(KitchenOrder kitchenOrder) {
-        kitchenOrder.setStatus("NEW");
-        kitchenOrder.setCreateDttm(OffsetDateTime.now());
-
-        kitchenOrderMapper.insert(kitchenOrder);
-        log.info("Created new kitchen order: kitchenOrderId={}", kitchenOrder.getKitchenOrderId());
     }
 
     /**

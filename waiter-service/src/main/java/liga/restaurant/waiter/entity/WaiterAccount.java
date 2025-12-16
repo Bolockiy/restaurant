@@ -15,32 +15,19 @@ import java.util.List;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@Schema(description = "Сущность аккаунта официанта")
 public class WaiterAccount {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "waiter_id_seq")
-    @SequenceGenerator(
-            name = "waiter_id_seq",
-            sequenceName = "waiter.waiter_account_waiter_id_seq",
-            allocationSize = 1
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "waiter_id")
-    @Schema(description = "Уникальный идентификатор официанта", example = "12")
     private Long id;
 
     @Column(nullable = false)
-    @Schema(description = "Имя официанта", example = "Иван Петров")
     private String name;
 
     @Column(nullable = false)
-    @Schema(description = "Пол официанта", example = "MALE")
     private String sex;
 
     @Column(name = "employment_date", nullable = false)
-    @Schema(
-            description = "Дата и время трудоустройства официанта",
-            example = "2024-01-15T10:30:00+03:00"
-    )
     private OffsetDateTime employmentDate;
 }

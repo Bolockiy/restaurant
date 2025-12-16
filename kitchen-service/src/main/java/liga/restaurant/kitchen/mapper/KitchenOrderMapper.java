@@ -9,7 +9,10 @@ public interface KitchenOrderMapper {
 
     KitchenOrder findById(Long id);
 
-    List<KitchenOrder> findAll();
+    List<KitchenOrder> findAll(
+            @Param("limit") int limit,
+            @Param("offset") int offset
+    );
 
     void insert(KitchenOrder kitchenOrder);
 
