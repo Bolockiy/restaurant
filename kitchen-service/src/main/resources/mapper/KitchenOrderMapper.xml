@@ -2,38 +2,39 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="liga.restaurant.kitchen.mapper.KitchenOrderMapper">
-    <!-- Получить заказ по id -->
-    <select id="findById" parameterMap="long"
-            resultType="liga.restaurant.kitchen.entity.KitchenOrder">
-        SELECT
-            kitchen_order_id AS KitchenOrderId,
-            waiter_order_no As waiterOrderNo,
-            status,
-            create_dttm AS createDttm
-        FROM kitchen.kitchen_order
-        WHERE kitchen_order_id = #{id}
-    </select>
-    <!-- Получить все заказы -->
-    <select id="findAll"
-    resultType="liga.restaurant.kitchen.entity.KitchenOrder">
+
+    <!-- Получить заказ по ID -->
+    <select id="findById" parameterType="long" resultType="liga.restaurant.kitchen.entity.KitchenOrder">
         SELECT
         kitchen_order_id AS kitchenOrderId,
         waiter_order_no  AS waiterOrderNo,
         status,
         create_dttm      AS createDttm
-        FROM kitchen.kitchen_order
+        FROM kitchen_order
+        WHERE kitchen_order_id = #{id}
+    </select>
+
+    <!-- Получить все заказы -->
+    <select id="findAll" resultType="liga.restaurant.kitchen.entity.KitchenOrder">
+        SELECT
+        kitchen_order_id AS kitchenOrderId,
+        waiter_order_no  AS waiterOrderNo,
+        status,
+        create_dttm      AS createDttm
+        FROM kitchen_order
     </select>
 
     <!-- Вставка нового заказа -->
     <insert id="insert" parameterType="liga.restaurant.kitchen.entity.KitchenOrder" useGeneratedKeys="true" keyProperty="kitchenOrderId">
-        INSERT INTO kitchen.kitchen_order(waiter_order_no, status, create_dttm)
+        INSERT INTO kitchen_order(waiter_order_no, status, create_dttm)
         VALUES (#{waiterOrderNo}, #{status}, #{createDttm})
     </insert>
 
     <!-- Обновление заказа -->
     <update id="update" parameterType="liga.restaurant.kitchen.entity.KitchenOrder">
-        UPDATE kitchen.kitchen_order
+        UPDATE kitchen_order
         SET waiter_order_no = #{waiterOrderNo},
         status = #{status},
         create_dttm = #{createDttm}
@@ -42,6 +43,7 @@
 
     <!-- Удаление заказа -->
     <delete id="delete" parameterType="long">
-        DELETE FROM kitchen.kitchen_order WHERE kitchen_order_id = #{id}
+        DELETE FROM kitchen_order WHERE kitchen_order_id = #{id}
     </delete>
+
 </mapper>

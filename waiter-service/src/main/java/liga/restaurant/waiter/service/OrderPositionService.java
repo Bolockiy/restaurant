@@ -12,8 +12,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class OrderPositionService {
-    private final OrderPositionRepository repo;
-
     public OrderPosition save(OrderPosition position) {
         OrderPosition saved = repo.save(position);
         log.debug("Order position saved: {}", saved);
@@ -49,4 +47,6 @@ public class OrderPositionService {
         repo.deleteById(id);
         log.info("Order position deleted: id={}", id);
     }
+
+    private final OrderPositionRepository repo;
 }

@@ -16,17 +16,11 @@ import ru.Liga.restaurant.BusinessException;
 import liga.restaurant.kitchen.mapper.KitchenOrderMapper;
 import java.time.OffsetDateTime;
 import java.util.List;
-
+import liga.restaurant.kitchen.mapper.KitchenOrderMapper;
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class KitchenService {
-
-    private final KitchenOrderMapper kitchenOrderMapper;
-    private final OrderToDishService orderToDishService;
-    private final KitchenKafkaProducer kitchenKafkaProducer;
-    private final DishService dishService;
-
     /**
      * Обрабатывает заказ, поступивший от waiter-сервиса.
      * Метод выполняется в одной транзакции.
@@ -180,4 +174,9 @@ public class KitchenService {
 
         log.debug("Deleted kitchen order and associated dishes: kitchenOrderId={}", id);
     }
+
+    private final KitchenOrderMapper kitchenOrderMapper;
+    private final OrderToDishService orderToDishService;
+    private final KitchenKafkaProducer kitchenKafkaProducer;
+    private final DishService dishService;
 }

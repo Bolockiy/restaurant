@@ -18,7 +18,6 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class DishController {
-    private final DishService dishService;
 
     @Operation(
             summary = "Получить блюдо по ID",
@@ -108,4 +107,6 @@ public class DishController {
     ) {
         dishService.delete(id);
     }
+
+    private final DishService dishService;
 }

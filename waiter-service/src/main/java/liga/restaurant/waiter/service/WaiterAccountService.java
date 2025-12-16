@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class WaiterAccountService {
-    private final WaiterAccountRepository repo;
 
     private WaiterAccount toEntity(WaiterAccountDto dto) {
         WaiterAccount entity = new WaiterAccount();
@@ -100,4 +99,6 @@ public class WaiterAccountService {
         log.info("Waiter account deleted: id={}", id);
         return true;
     }
+
+    private final WaiterAccountRepository repo;
 }

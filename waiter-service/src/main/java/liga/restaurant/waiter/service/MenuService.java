@@ -12,8 +12,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class MenuService {
-    private final MenuRepository repo;
-
     public Menu save(Menu menu) {
         Menu saved = repo.save(menu);
         log.debug("Menu item saved: {}", saved);
@@ -49,4 +47,6 @@ public class MenuService {
         repo.deleteById(id);
         log.info("Menu item deleted: id={}", id);
     }
+
+    private final MenuRepository repo;
 }

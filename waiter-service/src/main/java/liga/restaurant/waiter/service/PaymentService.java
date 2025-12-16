@@ -11,7 +11,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class PaymentService {
-    private final PaymentRepository repo;
 
     public Payment save(Payment payment) {
         Payment saved = repo.save(payment);
@@ -48,4 +47,6 @@ public class PaymentService {
         repo.deleteById(id);
         log.info("Payment deleted: id={}", id);
     }
+
+    private final PaymentRepository repo;
 }

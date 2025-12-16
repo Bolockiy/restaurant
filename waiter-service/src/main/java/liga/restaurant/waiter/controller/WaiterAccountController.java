@@ -21,7 +21,6 @@ import java.util.List;
 @Tag(name = "Waiter Accounts API", description = "Управление аккаунтами официантов")
 @RequiredArgsConstructor
 public class WaiterAccountController {
-    private final WaiterAccountService waiterService;
 
     @Operation(
             summary = "Создать аккаунт официанта",
@@ -125,4 +124,6 @@ public class WaiterAccountController {
         List<WaiterAccountDto> accounts = waiterService.findByName(name);
         return ResponseEntity.ok(accounts);
     }
+
+    private final WaiterAccountService waiterService;
 }

@@ -15,7 +15,6 @@ import java.util.List;
 @RequestMapping("/waiter/menu")
 @RequiredArgsConstructor
 public class MenuController {
-    private final MenuService service;
 
     @Operation (
             summary = "Создание меню",
@@ -79,4 +78,6 @@ public class MenuController {
     {
         service.delete(id);
     }
+
+    private final MenuService service;
 }

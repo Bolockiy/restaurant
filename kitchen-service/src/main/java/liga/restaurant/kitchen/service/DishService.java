@@ -16,7 +16,6 @@ import java.util.List;
 @Service
 @Slf4j
 public class DishService {
-    private final DishMapper dishMapper;
 
     public DishService(DishMapper dishMapper) {
         this.dishMapper = dishMapper;
@@ -72,4 +71,5 @@ public class DishService {
         log.info("Balance decreased: dishId={}, amount={}, newBalance={}",
                 dishId, amount, dish.getBalance() - amount);
     }
+    private final DishMapper dishMapper;
 }

@@ -16,7 +16,6 @@ import java.util.List;
 @Tag(name = "Payment API", description = "Управление оплатами заказов официанта")
 @RequiredArgsConstructor
 public class PaymentController {
-    private final PaymentService service;
 
     @Operation(
             summary = "Создать оплату",
@@ -68,4 +67,6 @@ public class PaymentController {
     public void delete(@PathVariable Long id) {
         service.delete(id);
     }
+
+    private final PaymentService service;
 }

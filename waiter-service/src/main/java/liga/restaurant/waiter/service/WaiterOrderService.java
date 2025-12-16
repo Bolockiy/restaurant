@@ -29,10 +29,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class WaiterOrderService {
-    private final WaiterOrderRepository repo;
-    private final WaiterKafkaProducer kafkaProducer;
-    private final WaiterAccountRepository waiterAccountRepository;
-
     /**
      * Создаёт заказ официанта и отправляет его на кухню.
      *
@@ -144,4 +140,8 @@ public class WaiterOrderService {
         repo.save(order);
         log.info("Статус заказа обновлён: id={}, newStatus={}", waiterOrderNo, status);
     }
+
+    private final WaiterOrderRepository repo;
+    private final WaiterKafkaProducer kafkaProducer;
+    private final WaiterAccountRepository waiterAccountRepository;
 }

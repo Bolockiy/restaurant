@@ -15,8 +15,6 @@ import java.util.List;
 @Tag(name = "Order Position API", description = "Позиции блюд в заказе официанта")
 @RequiredArgsConstructor
 public class OrderPositionController {
-    private final OrderPositionService service;
-
     @Operation(
             summary = "Создать позицию заказа",
             description = "Добавляет новую позицию блюда в заказ официанта"
@@ -67,4 +65,6 @@ public class OrderPositionController {
     public void delete(@PathVariable Long id) {
         service.delete(id);
     }
+
+    private final OrderPositionService service;
 }

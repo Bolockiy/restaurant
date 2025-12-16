@@ -23,7 +23,6 @@ import java.util.List;
 @Tag(name = "Waiter API", description = "Операции с заказами официантов")
 @RequiredArgsConstructor
 public class WaiterOrderController {
-    private final WaiterOrderService service;
 
     @Operation(
             summary = "Создать заказ официанта",
@@ -106,4 +105,6 @@ public class WaiterOrderController {
     ) {
         service.updateOrderStatus(dto.getWaiterOrderNo(), dto.getStatus());
     }
+
+    private final WaiterOrderService service;
 }
