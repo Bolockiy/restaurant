@@ -33,7 +33,7 @@ public class KitchenService {
      */
     @Transactional
     public boolean processOrderFromWaiter(KitchenOrderRequestDto dto) {
-        log.info("Processing order from waiter: waiterOrderNo={}", dto.getWaiterOrderNo());
+        log.info("Создание заказа, принятого от официанта: waiterOrderNo={}", dto.getWaiterOrderNo());
 
         for (OrderToDishDto d : dto.getDishes()) {
             dishService.checkAvailability(d.getDishId(), d.getDishesNumber());
@@ -48,7 +48,7 @@ public class KitchenService {
         order.setCreateDttm(OffsetDateTime.now());
 
         kitchenOrderMapper.insert(order);
-        log.info("Inserted kitchen order: kitchenOrderId={}", order.getKitchenOrderId());
+        log.info("Вставлен в БД kitchen order: kitchenOrderId={}", order.getKitchenOrderId());
 
         Long kitchenOrderId = order.getKitchenOrderId();
         for (OrderToDishDto d : dto.getDishes()) {
@@ -60,13 +60,12 @@ public class KitchenService {
             orderToDishService.create(otd);
 
             log.debug(
-                    "Created OrderToDish: kitchenOrderId={}, dishId={}, number={}",
+                    "Создан OrderToDish: kitchenOrderId={}, dishId={}, number={}",
                     kitchenOrderId,
                     d.getDishId(),
                     d.getDishesNumber()
             );
         }
-
         return true;
     }
 
@@ -80,28 +79,28 @@ public class KitchenService {
      * @throws NotFoundException если заказ не найден
      */
     public void markOrderReady(Long kitchenOrderId) {
-        log.info("Marking order as READY: kitchenOrderId={}", kitchenOrderId);
+        log.info("Пометка, что заказ готов: kitchenOrderId={}", kitchenOrderId);
 
         KitchenOrder order = kitchenOrderMapper.findById(kitchenOrderId);
 
         if (order == null) {
-            log.warn("Kitchen order not found: kitchenOrderId={}", kitchenOrderId);
+            log.warn("Заказ кухни не найден: kitchenOrderId={}", kitchenOrderId);
             throw new NotFoundException("Заказ кухни не найден: " + kitchenOrderId);
         }
 
         if ("READY".equalsIgnoreCase(order.getStatus())) {
-            log.warn("Order already READY: kitchenOrderId={}", kitchenOrderId);
+            log.warn("Заказ уже помечен как READY: kitchenOrderId={}", kitchenOrderId);
             throw new BusinessException("Заказ уже помечен как READY: " + kitchenOrderId);
         }
 
         order.setStatus("READY");
         kitchenOrderMapper.update(order);
-        log.info("Order marked as READY: kitchenOrderId={}", kitchenOrderId);
+        log.info("Заказ помечен как READY: kitchenOrderId={}", kitchenOrderId);
 
         OrderStatusDto dto = new OrderStatusDto(order.getWaiterOrderNo(), "READY");
         kitchenKafkaProducer.sendStatusToWaiter(dto);
 
-        log.debug("Sent order status to waiter: {}", dto);
+        log.debug("Отправление статуса заказа официанту: {}", dto);
     }
 
     /**
@@ -117,11 +116,11 @@ public class KitchenService {
 
         KitchenOrder order = kitchenOrderMapper.findById(id);
         if (order == null) {
-            log.warn("Kitchen order not found: id={}", id);
+            log.warn("Заказ кухни не найден: id={}", id);
             throw new NotFoundException("Заказ кухни не найден: " + id);
         }
 
-        log.debug("Found kitchen order: {}", order);
+        log.debug("Заказ найден: {}", order);
         return order;
     }
 
@@ -131,12 +130,12 @@ public class KitchenService {
      * @return список заказов кухни
      */
     public List<KitchenOrder> getAll(int page, int size) {
-        log.info("Fetching kitchen orders: page={}, size={}", page, size);
+        log.info("Поиск заказа постранично: page={}, size={}", page, size);
 
         int offset = page * size;
 
         List<KitchenOrder> orders = kitchenOrderMapper.findAll(size, offset);
-        log.debug("Found {} kitchen orders", orders.size());
+        log.debug("Найдено {} заказов", orders.size());
 
         return orders;
     }
@@ -151,7 +150,7 @@ public class KitchenService {
         kitchenOrder1.setWaiterOrderNo(kitchenOrder.getWaiterOrderNo());
         kitchenOrder1.setStatus(kitchenOrder.getStatus());
         kitchenOrderMapper.update(kitchenOrder1);
-        log.info("Updated kitchen order: kitchenOrderId={}", kitchenOrder.getKitchenOrderId());
+        log.info("Обновлен заказ на кухне: kitchenOrderId={}", kitchenOrder.getKitchenOrderId());
     }
 
     /**
@@ -162,12 +161,9 @@ public class KitchenService {
      */
     @Transactional
     public void delete(Long id) {
-        log.info("Deleting kitchen order: kitchenOrderId={}", id);
-
+        log.info("Удаление заказа на кухне: kitchenOrderId={}", id);
         orderToDishService.deleteByOrderId(id);
         kitchenOrderMapper.delete(id);
-
-        log.debug("Deleted kitchen order and associated dishes: kitchenOrderId={}", id);
     }
 
     private final KitchenOrderMapper kitchenOrderMapper;

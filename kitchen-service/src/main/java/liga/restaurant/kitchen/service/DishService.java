@@ -69,7 +69,7 @@ public class DishService {
      */
     public void decreaseBalance(Long dishId, Long amount) {
         dishMapper.decreaseBalance(dishId, amount);
-        log.info("Balance decreased: dishId={}, amount={}",
+        log.info("кол-во блюд изменено: dishId={}, amount={}",
                 dishId, amount);
     }
     private final DishMapper dishMapper;

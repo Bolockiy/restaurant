@@ -16,7 +16,7 @@ import liga.restaurant.waiter.repository.WaiterAccountRepository;
 public class WaiterAccountService {
 
     public WaiterAccount save(WaiterAccount dto) {
-        log.info("Saving new waiter account: name={}, sex={}, employmentDate={}", dto.getName(), dto.getSex(), dto.getEmploymentDate());
+        log.info("Создание нового аккаунта: name={}, sex={}, employmentDate={}", dto.getName(), dto.getSex(), dto.getEmploymentDate());
         return repo.save(dto);
     }
 
@@ -32,14 +32,14 @@ public class WaiterAccountService {
     }
 
     public WaiterAccountDto findByName(String name) {
-        log.info("Searching waiter accounts by name: {}", name);
+        log.info("Поиск аккаунта с именем: {}", name);
         return repo.findByName(name).map(o -> new WaiterAccountDto(
                 o.getId(),
                 o.getName(),
                 o.getSex(),
                 o.getEmploymentDate()
                 ))
-                .orElseThrow(() -> new NotFoundException("Waiter account not found: " + name));
+                .orElseThrow(() -> new NotFoundException("Официант не найден: " + name));
     }
 
     public WaiterAccountDto findById(Long id) {
@@ -49,12 +49,12 @@ public class WaiterAccountService {
                 o.getName(),
                 o.getSex(),
                 o.getEmploymentDate()
-        )).orElseThrow(() -> new NotFoundException("Waiter account not found: " + id));
+        )).orElseThrow(() -> new NotFoundException("Официант не найден id: " + id));
     }
 
     public WaiterAccount update(Long id, WaiterAccountDto dto) {
         log.info("Updating waiter account: id={}", id);
-         WaiterAccount waiterAccount = repo.findById(id).orElseThrow(() -> new NotFoundException("Waiter account not found: " + id));
+         WaiterAccount waiterAccount = repo.findById(id).orElseThrow(() -> new NotFoundException("Официант не найден id: " + id));
          waiterAccount.setName(dto.getName());
          waiterAccount.setSex(dto.getSex());
          waiterAccount.setEmploymentDate(dto.getEmploymentDate());
@@ -63,13 +63,13 @@ public class WaiterAccountService {
     }
 
     public void delete(Long id) {
-        log.info("Deleting waiter account: id={}", id);
+        log.info("Удаление аккаунта: id={}", id);
         if (!repo.existsById(id)) {
-            log.warn("Waiter account not found for deletion: id={}", id);
+            log.warn("Нет аккаунта: id={}", id);
             return;
         }
         repo.deleteById(id);
-        log.info("Waiter account deleted: id={}", id);
+        log.info("Аккаунт удалён: id={}", id);
     }
 
     private final WaiterAccountRepository repo;

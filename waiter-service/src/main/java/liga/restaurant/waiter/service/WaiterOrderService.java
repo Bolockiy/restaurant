@@ -31,11 +31,11 @@ public class WaiterOrderService {
     public WaiterOrder createOrderKitchen(CreateWaiterOrderDto dto) {
         log.info("Создание заказа официантом, tableNo={}", dto.getTableNo());
         if (dto.getWaiterId() == null) {
-            throw new IllegalArgumentException("Waiter ID cannot be null");
+            throw new NotFoundException("ID официанта не может быть null");
         }
 
         WaiterAccount waiter = waiterAccountRepository.findById(dto.getWaiterId())
-                .orElseThrow(() -> new NotFoundException("Waiter not found: " + dto.getWaiterId()));
+                .orElseThrow(() -> new NotFoundException("Официант не найден: " + dto.getWaiterId()));
 
         WaiterOrder order = new WaiterOrder();
         order.setTableNo(dto.getTableNo());
@@ -96,7 +96,7 @@ public class WaiterOrderService {
                 })
                 .orElseThrow(() -> {
                     log.warn("Заказ не найден: id={}", id);
-                    return new NotFoundException("Order not found with id " + id);
+                    return new NotFoundException("Заказ не найден id " + id);
                 });
     }
     /**
@@ -120,7 +120,7 @@ public class WaiterOrderService {
         WaiterOrder order = repo.findById(waiterOrderNo)
                 .orElseThrow(() -> {
                     log.warn("Заказ не найден для обновления статуса: id={}", waiterOrderNo);
-                    return new NotFoundException("Order not found: " + waiterOrderNo);
+                    return new NotFoundException("Заказ не найден: " + waiterOrderNo);
                 });
 
         if (status.equals(order.getStatus())) {
