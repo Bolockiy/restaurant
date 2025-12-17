@@ -80,7 +80,7 @@ public class KitchenController {
             @ApiResponse(responseCode = "200", description = "Заказ отмечен как READY"),
             @ApiResponse(responseCode = "404", description = "Заказ не найден")
     })
-    @PostMapping("/{id}/ready")
+    @PostMapping("ready/{id}")
     public void markReady(
             @Parameter(description = "ID заказа кухни", example = "10")
             @PathVariable Long id
