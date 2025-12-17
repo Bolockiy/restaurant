@@ -1,5 +1,6 @@
 package liga.restaurant.waiter.service;
 
+import liga.restaurant.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -49,10 +50,7 @@ public class WaiterAccountService {
                     log.debug("Found waiter account: {}", entity);
                     return toDto(entity);
                 })
-                .orElseGet(() -> {
-                    log.warn("Waiter account not found: id={}", id);
-                    return null;
-                });
+                .orElseThrow(() -> new NotFoundException("Waiter account not found: " + id));
     }
 
     public WaiterAccountDto update(Long id, WaiterAccountDto dto) {
@@ -66,10 +64,7 @@ public class WaiterAccountService {
                     log.debug("Updated waiter account: {}", updated);
                     return toDto(updated);
                 })
-                .orElseGet(() -> {
-                    log.warn("Waiter account not found for update: id={}", id);
-                    return null;
-                });
+                .orElseThrow(() -> new NotFoundException("Waiter account not found: " + id));
     }
 
     public boolean delete(Long id) {

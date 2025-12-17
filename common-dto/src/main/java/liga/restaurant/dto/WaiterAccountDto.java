@@ -1,4 +1,5 @@
 package liga.restaurant.dto;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import java.time.OffsetDateTime;
 
@@ -16,7 +17,11 @@ import java.time.OffsetDateTime;
  */
 public class WaiterAccountDto {
     private Long id;
+
+    @NotNull
     private String name;
+    @NotNull
     private String sex;
+    @NotNull
     private OffsetDateTime employmentDate;
 }

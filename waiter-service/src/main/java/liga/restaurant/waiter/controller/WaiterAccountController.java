@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,7 @@ public class WaiterAccountController {
     })
     @PostMapping
     public ResponseEntity<WaiterAccountDto> createAccount(
-            @RequestBody WaiterAccountDto dto
+           @Valid @RequestBody WaiterAccountDto dto
     ) {
         WaiterAccountDto saved = waiterService.save(dto);
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
@@ -59,15 +60,11 @@ public class WaiterAccountController {
             @ApiResponse(responseCode = "404", description = "Официант не найден")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<WaiterAccountDto> findById(
+    public WaiterAccountDto findById(
             @Parameter(description = "ID официанта", example = "1")
             @PathVariable Long id
     ) {
-        WaiterAccountDto dto = waiterService.findById(id);
-        if (dto == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(dto);
+        return waiterService.findById(id);
     }
 
     @Operation(

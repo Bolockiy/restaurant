@@ -39,7 +39,7 @@ public class WaiterOrderService {
 
         WaiterOrder order = new WaiterOrder();
         order.setTableNo(dto.getTableNo());
-        order.setStatus("CREATED");
+        order.setStatus("COOKING");
         order.setCreateDttm(OffsetDateTime.now());
         order.setWaiter(waiter);
         WaiterOrder savedOrder = repo.save(order);
