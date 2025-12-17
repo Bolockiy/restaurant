@@ -6,15 +6,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import liga.restaurant.dto.ApiErrorResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import liga.restaurant.dto.KitchenOrderRequestDto;
 import liga.restaurant.kitchen.entity.KitchenOrder;
 import liga.restaurant.kitchen.service.KitchenService;
-
 import java.util.List;
+
 @RestController
 @RequestMapping("/kitchen/orders")
 @Tag(name = "Kitchen API", description = "Работа с заказами кухни")
@@ -98,17 +96,15 @@ public class KitchenController {
     })
     @PutMapping("/{id}")
     public void update(
-            @Valid
             @Parameter(description = "ID заказа кухни", example = "5")
-            @PathVariable Long id,
 
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Обновлённые данные заказа",
                     required = true
             )
-            @RequestBody KitchenOrder kitchenOrder
+            @Valid @RequestBody KitchenOrder kitchenOrder
     ) {
-        kitchenOrder.setKitchenOrderId(id);
+
         kitchenService.update(kitchenOrder);
     }
 

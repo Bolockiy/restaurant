@@ -16,10 +16,6 @@ public class OrderToDishService {
         return mapper.findByOrderId(orderId);
     }
 
-    public OrderToDish getOne(Long kitchenOrderId, Long dishId) {
-        return mapper.findOne(kitchenOrderId, dishId);
-    }
-
     public void create(OrderToDish orderToDish) {
         mapper.insert(orderToDish);
     }

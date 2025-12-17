@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import liga.restaurant.waiter.entity.Menu;
 import liga.restaurant.waiter.service.MenuService;
-
 import java.util.List;
 
 @RestController

@@ -147,7 +147,10 @@ public class KitchenService {
      * @param kitchenOrder заказ кухни с обновлёнными данными
      */
     public void update(KitchenOrder kitchenOrder) {
-        kitchenOrderMapper.update(kitchenOrder);
+        KitchenOrder kitchenOrder1 =  kitchenOrderMapper.findById(kitchenOrder.getKitchenOrderId());
+        kitchenOrder1.setWaiterOrderNo(kitchenOrder.getWaiterOrderNo());
+        kitchenOrder1.setStatus(kitchenOrder.getStatus());
+        kitchenOrderMapper.update(kitchenOrder1);
         log.info("Updated kitchen order: kitchenOrderId={}", kitchenOrder.getKitchenOrderId());
     }
 

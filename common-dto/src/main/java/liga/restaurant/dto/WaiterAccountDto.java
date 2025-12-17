@@ -20,8 +20,8 @@ public class WaiterAccountDto {
 
     @NotNull
     private String name;
-    @NotNull
+
     private String sex;
-    @NotNull
+
     private OffsetDateTime employmentDate;
 }

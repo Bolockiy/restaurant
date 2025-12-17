@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import liga.restaurant.waiter.entity.Menu;
 import liga.restaurant.waiter.repository.MenuRepository;
-
 import java.util.List;
 
 @Service

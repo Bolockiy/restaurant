@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import liga.restaurant.waiter.entity.Payment;
 import liga.restaurant.waiter.service.PaymentService;
-
 import java.util.List;
 
 @RestController

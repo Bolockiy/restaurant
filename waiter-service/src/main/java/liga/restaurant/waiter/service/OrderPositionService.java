@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import liga.restaurant.waiter.entity.OrderPosition;
 import liga.restaurant.waiter.repository.OrderPositionRepository;
-
 import java.util.List;
 
 @Service

@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import liga.restaurant.kitchen.entity.Dish;
 import liga.restaurant.kitchen.mapper.DishMapper;
-import org.springframework.transaction.annotation.Transactional;
 import liga.restaurant.BusinessException;
 import liga.restaurant.NotFoundException;
 
@@ -38,6 +37,15 @@ public class DishService {
         dishMapper.delete(id);
     }
 
+    /**
+     * Проверка хватает ли блюд в БД
+     *
+     * @param dishId идентификатор блюда
+     * @param amount кол-во блюд
+     *
+     * @throws BusinessException если недостаточно блюда
+     * @throws NotFoundException если блюдо не найдено
+     */
     public void checkAvailability(Long dishId, Long amount) {
         Dish dish = dishMapper.findByIdForUpdate(dishId);
 
@@ -55,17 +63,10 @@ public class DishService {
     }
 
     /**
-     * Помечает заказ кухни как READY (готов).
-     * После этого отправляет статус официанту через Kafka.
-     *
+     * Удаляет блюдо из БД
      * @param dishId идентификатор блюда
      * @param amount кол-во блюд
-     *
-     * @throws BusinessException если недостаточно блюда
-     * @throws NotFoundException если блюдо не найдено
      */
-
-    @Transactional
     public void decreaseBalance(Long dishId, Long amount) {
         dishMapper.decreaseBalance(dishId, amount);
         log.info("Balance decreased: dishId={}, amount={}",
