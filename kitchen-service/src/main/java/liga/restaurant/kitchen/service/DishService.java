@@ -1,15 +1,12 @@
 package liga.restaurant.kitchen.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Service;
 import liga.restaurant.kitchen.entity.Dish;
 import liga.restaurant.kitchen.mapper.DishMapper;
 import org.springframework.transaction.annotation.Transactional;
-import ru.Liga.restaurant.BusinessException;
-import ru.Liga.restaurant.NotFoundException;
+import liga.restaurant.BusinessException;
+import liga.restaurant.NotFoundException;
 
 import java.util.List;
 

@@ -63,12 +63,11 @@ public class KitchenController {
     })
     @PostMapping
     public void create(
-            @Valid
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "DTO заказа от официанта",
                     required = true
             )
-            @RequestBody KitchenOrderRequestDto kitchenOrder
+            @Valid @RequestBody KitchenOrderRequestDto kitchenOrder
     ) {
         kitchenService.processOrderFromWaiter(kitchenOrder);
     }
@@ -82,12 +81,11 @@ public class KitchenController {
             @ApiResponse(responseCode = "404", description = "Заказ не найден")
     })
     @PostMapping("/{id}/ready")
-    public ResponseEntity<ApiErrorResponse> markReady(
+    public void markReady(
             @Parameter(description = "ID заказа кухни", example = "10")
             @PathVariable Long id
     ) {
         kitchenService.markOrderReady(id);
-        return ResponseEntity.ok(new ApiErrorResponse(200, "Заказ успешно помечен как READY: " + id));
     }
 
     @Operation(

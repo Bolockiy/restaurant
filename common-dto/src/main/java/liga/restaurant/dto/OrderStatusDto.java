@@ -1,5 +1,6 @@
 package liga.restaurant.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 /**
@@ -13,6 +14,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderStatusDto {
+    @NotNull
     private Long waiterOrderNo;
+    @NotNull
     private String status;
 }

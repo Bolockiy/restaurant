@@ -1,5 +1,7 @@
 package liga.restaurant.dto;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -19,5 +21,7 @@ public class KitchenOrderRequestDto {
     @NotNull
     private Long waiterOrderNo;
 
-    private List<@NotNull OrderToDishDto> dishes;
+    @NotNull
+    @Valid
+    private List<OrderToDishDto> dishes;
 }

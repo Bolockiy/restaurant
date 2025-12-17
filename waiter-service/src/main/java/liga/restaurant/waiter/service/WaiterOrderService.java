@@ -2,28 +2,20 @@ package liga.restaurant.waiter.service;
 
 import jakarta.transaction.Transactional;
 import liga.restaurant.dto.CreateWaiterOrderDto;
-import liga.restaurant.dto.WaiterAccountDto;
-import liga.restaurant.waiter.entity.Menu;
-import liga.restaurant.waiter.entity.OrderPosition;
 import liga.restaurant.waiter.entity.WaiterAccount;
 import liga.restaurant.waiter.repository.WaiterAccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import liga.restaurant.dto.KitchenOrderRequestDto;
 import liga.restaurant.dto.WaiterOrderDto;
 import liga.restaurant.waiter.entity.WaiterOrder;
 import liga.restaurant.waiter.kafka.WaiterKafkaProducer;
 import liga.restaurant.waiter.repository.WaiterOrderRepository;
-import ru.Liga.restaurant.BusinessException;
-import ru.Liga.restaurant.NotFoundException;
+import liga.restaurant.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -43,7 +35,7 @@ public class WaiterOrderService {
         }
 
         WaiterAccount waiter = waiterAccountRepository.findById(dto.getWaiterId())
-                .orElseThrow(() -> new RuntimeException("Waiter not found: " + dto.getWaiterId()));
+                .orElseThrow(() -> new NotFoundException("Waiter not found: " + dto.getWaiterId()));
 
         WaiterOrder order = new WaiterOrder();
         order.setTableNo(dto.getTableNo());
@@ -140,7 +132,6 @@ public class WaiterOrderService {
         repo.save(order);
         log.info("Статус заказа обновлён: id={}, newStatus={}", waiterOrderNo, status);
     }
-
     private final WaiterOrderRepository repo;
     private final WaiterKafkaProducer kafkaProducer;
     private final WaiterAccountRepository waiterAccountRepository;

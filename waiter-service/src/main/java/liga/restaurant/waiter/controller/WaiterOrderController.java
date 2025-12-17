@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import liga.restaurant.dto.CreateWaiterOrderDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +39,7 @@ public class WaiterOrderController {
                     description = "Сущность заказа",
                     required = true
             )
-            @RequestBody CreateWaiterOrderDto order
+            @Valid @RequestBody CreateWaiterOrderDto order
     ) {
         return service.createOrderKitchen(order);
     }
@@ -101,7 +102,7 @@ public class WaiterOrderController {
                     description = "DTO изменения статуса заказа",
                     required = true
             )
-            @RequestBody OrderStatusDto dto
+            @Valid @RequestBody OrderStatusDto dto
     ) {
         service.updateOrderStatus(dto.getWaiterOrderNo(), dto.getStatus());
     }

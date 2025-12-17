@@ -1,5 +1,6 @@
 package liga.restaurant.dto;
 
+import jakarta.validation.Valid;
 import lombok.*;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
@@ -13,6 +14,7 @@ public class CreateWaiterOrderDto {
     private String tableNo;
 
     @NotNull
+    @Valid
     private List<OrderToDishDto> dishes;
 
     @NotNull

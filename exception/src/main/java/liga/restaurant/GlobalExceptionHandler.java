@@ -1,4 +1,4 @@
-package ru.Liga.restaurant;
+package liga.restaurant;
 
 import liga.restaurant.dto.ApiErrorResponse;
 import org.springframework.http.HttpStatus;
@@ -6,8 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.Liga.restaurant.BusinessException;
-import ru.Liga.restaurant.NotFoundException;
 
 
 @RestControllerAdvice
