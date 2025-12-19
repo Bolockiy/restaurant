@@ -1,11 +1,11 @@
 package liga.restaurant.kitchen.Kafka;
 
+import liga.restaurant.dto.OrderStatusDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import liga.restaurant.dto.OrderStatusDto;
-import org.springframework.beans.factory.annotation.Value;
 
 /**
  * Kafka producer кухни.

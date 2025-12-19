@@ -4,10 +4,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
 import liga.restaurant.waiter.entity.Menu;
 import liga.restaurant.waiter.service.MenuService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -15,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MenuController {
 
-    @Operation (
+    @Operation(
             summary = "Создание меню",
             description = "Создает меню по заданному json"
     )
@@ -25,7 +26,7 @@ public class MenuController {
     })
 
     @PostMapping
-    public Menu create( @io.swagger.v3.oas.annotations.parameters.RequestBody(
+    public Menu create(@io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "DTO меню",
             required = true
     ) @RequestBody Menu menu) {
@@ -55,8 +56,8 @@ public class MenuController {
     })
 
     @GetMapping("/{id}")
-    public Menu getById(   @Parameter(description = "ID меню", example = "1")
-                               @PathVariable Long id) {
+    public Menu getById(@Parameter(description = "ID меню", example = "1")
+                        @PathVariable Long id) {
         return service.findById(id);
     }
 
@@ -73,8 +74,7 @@ public class MenuController {
     public void delete(
             @Parameter(description = "ID меню", example = "7")
             @PathVariable Long id
-    )
-    {
+    ) {
         service.delete(id);
     }
 

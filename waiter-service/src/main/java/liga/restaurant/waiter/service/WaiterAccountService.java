@@ -1,14 +1,14 @@
 package liga.restaurant.waiter.service;
 
 import liga.restaurant.NotFoundException;
+import liga.restaurant.dto.WaiterAccountDto;
+import liga.restaurant.waiter.entity.WaiterAccount;
+import liga.restaurant.waiter.repository.WaiterAccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import liga.restaurant.dto.WaiterAccountDto;
-import liga.restaurant.waiter.entity.WaiterAccount;
-import liga.restaurant.waiter.repository.WaiterAccountRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -34,17 +34,17 @@ public class WaiterAccountService {
     public WaiterAccountDto findByName(String name) {
         log.info("Поиск аккаунта с именем: {}", name);
         return repo.findByName(name).map(o -> new WaiterAccountDto(
-                o.getId(),
-                o.getName(),
-                o.getSex(),
-                o.getEmploymentDate()
+                        o.getId(),
+                        o.getName(),
+                        o.getSex(),
+                        o.getEmploymentDate()
                 ))
                 .orElseThrow(() -> new NotFoundException("Официант не найден: " + name));
     }
 
     public WaiterAccountDto findById(Long id) {
         log.info("Fetching waiter account by id: {}", id);
-        return repo.findById(id).map(o-> new WaiterAccountDto(
+        return repo.findById(id).map(o -> new WaiterAccountDto(
                 o.getId(),
                 o.getName(),
                 o.getSex(),
@@ -54,12 +54,12 @@ public class WaiterAccountService {
 
     public WaiterAccount update(Long id, WaiterAccountDto dto) {
         log.info("Updating waiter account: id={}", id);
-         WaiterAccount waiterAccount = repo.findById(id).orElseThrow(() -> new NotFoundException("Официант не найден id: " + id));
-         waiterAccount.setName(dto.getName());
-         waiterAccount.setSex(dto.getSex());
-         waiterAccount.setEmploymentDate(dto.getEmploymentDate());
-         repo.save(waiterAccount);
-         return waiterAccount;
+        WaiterAccount waiterAccount = repo.findById(id).orElseThrow(() -> new NotFoundException("Официант не найден id: " + id));
+        waiterAccount.setName(dto.getName());
+        waiterAccount.setSex(dto.getSex());
+        waiterAccount.setEmploymentDate(dto.getEmploymentDate());
+        repo.save(waiterAccount);
+        return waiterAccount;
     }
 
     public void delete(Long id) {

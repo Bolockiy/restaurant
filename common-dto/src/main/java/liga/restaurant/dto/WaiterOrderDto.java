@@ -1,23 +1,39 @@
 package liga.restaurant.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.OffsetDateTime;
 
+/**
+ * DTO, представляющий заказ, созданный официантом.
+ * <p>
+ * Используется для передачи данных между сервисом официанта (waiter-service)
+ * и слоем хранения данных (базой данных).
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-/**
- * DTO представляет заказ, созданный официантом.
- * Используется для передачи данных между waiter-сервисом и бд
- *
- * id — уникальный идентификатор заказа.
- * status — текущий статус заказа (NEW, COOKING, READY, FAILED и т.п.).
- * tableNo — номер стола, к которому привязан заказ.
- * createDttm — дата и время создания заказа.
- */
 public class WaiterOrderDto {
+
+    /**
+     * Уникальный идентификатор заказа.
+     */
     Long id;
-    String status;
+
+    /**
+     * Текущий статус заказа.
+     */
+    OrderStatus status;
+
+    /**
+     * Номер стола, к которому привязан заказ.
+     */
     String tableNo;
+
+    /**
+     * Дата и время создания заказа.
+     */
     OffsetDateTime createDttm;
 }

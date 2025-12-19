@@ -7,17 +7,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import liga.restaurant.dto.CreateWaiterOrderDto;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-import liga.restaurant.dto.KitchenOrderRequestDto;
 import liga.restaurant.dto.OrderStatusDto;
 import liga.restaurant.dto.WaiterOrderDto;
 import liga.restaurant.waiter.entity.WaiterOrder;
 import liga.restaurant.waiter.service.WaiterOrderService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.web.bind.annotation.RequestParam;
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/waiter/orders")
@@ -43,6 +40,7 @@ public class WaiterOrderController {
     ) {
         return service.createOrderKitchen(order);
     }
+
     @Operation(
             summary = "Получить все заказы официантов",
             description = "Возвращает список всех заказов"
@@ -56,6 +54,7 @@ public class WaiterOrderController {
             @RequestParam(defaultValue = "10") int size) {
         return service.findAll(PageRequest.of(page, size));
     }
+
     @Operation(
             summary = "Получить заказ официанта по ID",
             description = "Возвращает заказ официанта с позициями"

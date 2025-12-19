@@ -13,17 +13,15 @@ VALUES
 
 INSERT INTO waiter_order (order_no, status, create_dttm, waiter_id, table_no)
 VALUES
-    (1001, 'COOKING', NOW(), 1, 'A1'),
-    (1002, 'COOKING', NOW(), 2, 'B3');
+    (1, 'COOKING', NOW(), 1, 'A1'),
+    (2, 'COOKING', NOW(), 2, 'B3');
 
 INSERT INTO order_positions (composition_id, dish_num, order_no, menu_position_id)
 VALUES
-    (1, 2, 1001, 1),
-    (2, 1, 1001, 2),
-    (3, 1, 1002, 3),
-    (4, 2, 1002, 5);
+    (1, 2, 1, 1),
+    (2, 1, 1, 2),
 
 INSERT INTO payment (order_no, payment_type, payment_date, payment_sum)
 VALUES
-    (1001, 'CASH', NOW(), 950),
-    (1002, 'CARD', NOW(), 1500);
+    (1, 'CASH', NOW(), 950),
+    (2, 'CARD', NOW(), 1500);

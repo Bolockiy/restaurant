@@ -1,10 +1,11 @@
 package liga.restaurant.waiter.service;
 
+import liga.restaurant.waiter.entity.Payment;
+import liga.restaurant.waiter.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import liga.restaurant.waiter.entity.Payment;
-import liga.restaurant.waiter.repository.PaymentRepository;
+
 import java.util.List;
 
 @Service

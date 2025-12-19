@@ -6,7 +6,7 @@ VALUES
 
 INSERT INTO kitchen_order (waiter_order_no, status, create_dttm)
 VALUES
-    (1001, 'NEW', NOW());
+    (1, 'NEW', NOW());
 
 INSERT INTO order_to_dish (kitchen_order_id, dish_id, dishes_number)
 VALUES

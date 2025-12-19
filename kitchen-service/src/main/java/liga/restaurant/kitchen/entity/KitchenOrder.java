@@ -1,8 +1,9 @@
 package liga.restaurant.kitchen.entity;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import liga.restaurant.dto.OrderStatus;
 import lombok.Data;
+
 import java.time.OffsetDateTime;
 
 @Data
@@ -14,7 +15,7 @@ public class KitchenOrder {
     private Long waiterOrderNo;
 
     @NotNull(message = "status must not be null")
-    private String status;
+    private OrderStatus status;
 
     @NotNull(message = "createDttm must not be null")
     private OffsetDateTime createDttm;

@@ -1,18 +1,20 @@
 package liga.restaurant.kitchen.service;
 
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import liga.restaurant.BusinessException;
+import liga.restaurant.NotFoundException;
 import liga.restaurant.dto.KitchenOrderRequestDto;
+import liga.restaurant.dto.OrderStatus;
 import liga.restaurant.dto.OrderStatusDto;
 import liga.restaurant.dto.OrderToDishDto;
 import liga.restaurant.kitchen.Kafka.KitchenKafkaProducer;
 import liga.restaurant.kitchen.entity.KitchenOrder;
 import liga.restaurant.kitchen.entity.OrderToDish;
-import liga.restaurant.NotFoundException;
-import liga.restaurant.BusinessException;
 import liga.restaurant.kitchen.mapper.KitchenOrderMapper;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -27,7 +29,6 @@ public class KitchenService {
      *
      * @param dto заказ от официанта (номер заказа и блюда)
      * @return true — если заказ успешно принят кухней
-     *
      * @throws BusinessException если недостаточно продуктов
      * @throws NotFoundException если блюдо не найдено
      */
@@ -44,7 +45,7 @@ public class KitchenService {
 
         KitchenOrder order = new KitchenOrder();
         order.setWaiterOrderNo(dto.getWaiterOrderNo());
-        order.setStatus("COOKING");
+        order.setStatus(OrderStatus.COOKING);
         order.setCreateDttm(OffsetDateTime.now());
 
         kitchenOrderMapper.insert(order);
@@ -74,7 +75,6 @@ public class KitchenService {
      * После этого отправляет статус официанту через Kafka.
      *
      * @param kitchenOrderId идентификатор заказа кухни
-     *
      * @throws BusinessException если заказ уже имеет статус READY
      * @throws NotFoundException если заказ не найден
      */
@@ -88,16 +88,16 @@ public class KitchenService {
             throw new NotFoundException("Заказ кухни не найден: " + kitchenOrderId);
         }
 
-        if ("READY".equalsIgnoreCase(order.getStatus())) {
+        if (OrderStatus.READY.toString().equalsIgnoreCase(order.getStatus().toString())) {
             log.warn("Заказ уже помечен как READY: kitchenOrderId={}", kitchenOrderId);
             throw new BusinessException("Заказ уже помечен как READY: " + kitchenOrderId);
         }
 
-        order.setStatus("READY");
+        order.setStatus(OrderStatus.READY);
         kitchenOrderMapper.update(order);
         log.info("Заказ помечен как READY: kitchenOrderId={}", kitchenOrderId);
 
-        OrderStatusDto dto = new OrderStatusDto(order.getWaiterOrderNo(), "READY");
+        OrderStatusDto dto = new OrderStatusDto(order.getWaiterOrderNo(), OrderStatus.READY);
         kitchenKafkaProducer.sendStatusToWaiter(dto);
 
         log.debug("Отправление статуса заказа официанту: {}", dto);
@@ -108,7 +108,6 @@ public class KitchenService {
      *
      * @param id идентификатор заказа кухни
      * @return заказ кухни
-     *
      * @throws NotFoundException если заказ не найден
      */
     public KitchenOrder getById(Long id) {
@@ -146,7 +145,7 @@ public class KitchenService {
      * @param kitchenOrder заказ кухни с обновлёнными данными
      */
     public void update(KitchenOrder kitchenOrder) {
-        KitchenOrder kitchenOrder1 =  kitchenOrderMapper.findById(kitchenOrder.getKitchenOrderId());
+        KitchenOrder kitchenOrder1 = kitchenOrderMapper.findById(kitchenOrder.getKitchenOrderId());
         kitchenOrder1.setWaiterOrderNo(kitchenOrder.getWaiterOrderNo());
         kitchenOrder1.setStatus(kitchenOrder.getStatus());
         kitchenOrderMapper.update(kitchenOrder1);

@@ -1,21 +1,24 @@
 package service;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.*;
 import liga.restaurant.dto.KitchenOrderRequestDto;
 import liga.restaurant.dto.WaiterOrderDto;
 import liga.restaurant.waiter.entity.WaiterOrder;
 import liga.restaurant.waiter.kafka.KitchenKafkaProducer;
 import liga.restaurant.waiter.repository.WaiterOrderRepository;
 import liga.restaurant.waiter.service.WaiterOrderService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class WaiterOrderServiceTest {
@@ -61,10 +64,16 @@ class WaiterOrderServiceTest {
     @Test
     void findAll_shouldReturnDtoList() {
         WaiterOrder o1 = new WaiterOrder();
-        o1.setId(1L); o1.setStatus("NEW"); o1.setTableNo("A1"); o1.setCreateDttm(OffsetDateTime.now());
+        o1.setId(1L);
+        o1.setStatus("NEW");
+        o1.setTableNo("A1");
+        o1.setCreateDttm(OffsetDateTime.now());
 
         WaiterOrder o2 = new WaiterOrder();
-        o2.setId(2L); o2.setStatus("READY"); o2.setTableNo("B2"); o2.setCreateDttm(OffsetDateTime.now());
+        o2.setId(2L);
+        o2.setStatus("READY");
+        o2.setTableNo("B2");
+        o2.setCreateDttm(OffsetDateTime.now());
 
         when(repo.findAll()).thenReturn(Arrays.asList(o1, o2));
 
@@ -75,7 +84,10 @@ class WaiterOrderServiceTest {
     @Test
     void findById_existingOrder_shouldReturnDto() {
         WaiterOrder o = new WaiterOrder();
-        o.setId(1L); o.setStatus("NEW"); o.setTableNo("A1"); o.setCreateDttm(OffsetDateTime.now());
+        o.setId(1L);
+        o.setStatus("NEW");
+        o.setTableNo("A1");
+        o.setCreateDttm(OffsetDateTime.now());
 
         when(repo.findById(1L)).thenReturn(Optional.of(o));
 

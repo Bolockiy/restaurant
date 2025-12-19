@@ -9,9 +9,9 @@
     <select id="findById" parameterType="long" resultType="liga.restaurant.kitchen.entity.KitchenOrder">
         SELECT
         kitchen_order_id AS kitchenOrderId,
-        waiter_order_no  AS waiterOrderNo,
+        waiter_order_no AS waiterOrderNo,
         status,
-        create_dttm      AS createDttm
+        create_dttm AS createDttm
         FROM kitchen_order
         WHERE kitchen_order_id = #{id}
     </select>
@@ -20,9 +20,9 @@
     <select id="findAll" resultType="liga.restaurant.kitchen.entity.KitchenOrder">
         SELECT
         kitchen_order_id AS kitchenOrderId,
-        waiter_order_no  AS waiterOrderNo,
+        waiter_order_no AS waiterOrderNo,
         status,
-        create_dttm      AS createDttm
+        create_dttm AS createDttm
         FROM kitchen_order
         ORDER BY kitchen_order_id DESC
         LIMIT #{limit}
@@ -30,7 +30,8 @@
     </select>
 
     <!-- Вставка нового заказа -->
-    <insert id="insert" parameterType="liga.restaurant.kitchen.entity.KitchenOrder" useGeneratedKeys="true" keyProperty="kitchenOrderId">
+    <insert id="insert" parameterType="liga.restaurant.kitchen.entity.KitchenOrder" useGeneratedKeys="true"
+            keyProperty="kitchenOrderId">
         INSERT INTO kitchen_order(waiter_order_no, status, create_dttm)
         VALUES (#{waiterOrderNo}, #{status}, #{createDttm})
     </insert>

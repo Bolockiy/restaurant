@@ -1,8 +1,8 @@
 package liga.restaurant.kitchen.mapper;
 
-import org.apache.ibatis.annotations.*;
 import liga.restaurant.kitchen.entity.Dish;
-import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.*;
+
 import java.util.List;
 
 @Mapper
@@ -33,11 +33,11 @@ public interface DishMapper {
     void delete(Long id);
 
     @Select("""
-        SELECT dish_id, balance, short_name, dish_composition
-        FROM dish
-        WHERE dish_id = #{id}
-        FOR UPDATE
-    """)
+                SELECT dish_id, balance, short_name, dish_composition
+                FROM dish
+                WHERE dish_id = #{id}
+                FOR UPDATE
+            """)
     @Results({
             @Result(property = "dishId", column = "dish_id"),
             @Result(property = "balance", column = "balance"),
@@ -47,10 +47,10 @@ public interface DishMapper {
     Dish findByIdForUpdate(Long id);
 
     @Update("""
-        UPDATE dish
-        SET balance = balance - #{amount}
-        WHERE dish_id = #{dishId}
-    """)
+                UPDATE dish
+                SET balance = balance - #{amount}
+                WHERE dish_id = #{dishId}
+            """)
     void decreaseBalance(@Param("dishId") Long dishId,
                          @Param("amount") Long amount);
 }

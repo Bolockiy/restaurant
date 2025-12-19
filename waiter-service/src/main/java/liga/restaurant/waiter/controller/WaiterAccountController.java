@@ -8,13 +8,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import liga.restaurant.dto.WaiterAccountDto;
 import liga.restaurant.waiter.entity.WaiterAccount;
+import liga.restaurant.waiter.service.WaiterAccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
-import liga.restaurant.dto.WaiterAccountDto;
-import liga.restaurant.waiter.service.WaiterAccountService;
 
 @RestController
 @RequestMapping("/waiter/accounts")
@@ -33,9 +33,9 @@ public class WaiterAccountController {
     })
     @PostMapping
     public WaiterAccount createAccount(
-           @Valid @RequestBody WaiterAccount dto
+            @Valid @RequestBody WaiterAccount dto
     ) {
-       return waiterService.save(dto);
+        return waiterService.save(dto);
     }
 
     @Operation(
@@ -46,8 +46,8 @@ public class WaiterAccountController {
     @GetMapping("/all")
     public Page<WaiterAccountDto> findAll(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size){
-        return waiterService.findAll(PageRequest.of(page,size));
+            @RequestParam(defaultValue = "10") int size) {
+        return waiterService.findAll(PageRequest.of(page, size));
     }
 
     @Operation(

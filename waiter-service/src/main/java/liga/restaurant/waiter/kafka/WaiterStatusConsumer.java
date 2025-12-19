@@ -1,13 +1,12 @@
 package liga.restaurant.waiter.kafka;
 
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.stereotype.Service;
 import liga.restaurant.dto.OrderStatusDto;
 import liga.restaurant.waiter.service.WaiterOrderService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Service;
 
 /**
  * Kafka consumer waiter
@@ -25,7 +24,7 @@ public class WaiterStatusConsumer {
             groupId = "${app.kafka.groups.kitchen}"
     )
     public void consumeStatus(OrderStatusDto dto) {
-        log.info("Received order status: orderNo={} status={}", dto.getWaiterOrderNo(), dto.getStatus());
+        log.info("Received order status: orderNo={} status={}", dto.getWaiterOrderNo(), dto.getStatus().toString());
         waiterOrderService.updateOrderStatus(dto.getWaiterOrderNo(), dto.getStatus());
     }
 }

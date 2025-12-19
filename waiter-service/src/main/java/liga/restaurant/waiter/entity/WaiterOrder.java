@@ -2,14 +2,12 @@ package liga.restaurant.waiter.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import liga.restaurant.dto.OrderStatus;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "waiter_order")
@@ -24,7 +22,7 @@ public class WaiterOrder {
     private Long id;
 
     @Column(nullable = false)
-    private String status;
+    private OrderStatus status;
 
     @Column(name = "create_dttm", nullable = false)
     private OffsetDateTime createDttm;

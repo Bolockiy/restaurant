@@ -1,18 +1,27 @@
 package liga.restaurant.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+/**
+ * DTO, описывающий одну позицию заказа.
+ * <p>
+ * Используется в составе KitchenOrderRequestDto
+ * при отправке заказа на кухню.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-/**
- * DTO описывает одну позицию заказа.
- * Используется внутри KitchenOrderRequestDto при отправке заказа на кухню.
- *
- * dishId — идентификатор блюда.
- * dishesNumber — количество единиц этого блюда в заказе.
- */
 public class OrderToDishDto {
+
+    /**
+     * Идентификатор блюда.
+     */
     private Long dishId;
+
+    /**
+     * Количество единиц данного блюда в заказе.
+     */
     private Long dishesNumber;
 }

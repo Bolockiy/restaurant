@@ -1,11 +1,11 @@
 package liga.restaurant.kitchen.service;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import liga.restaurant.kitchen.entity.Dish;
-import liga.restaurant.kitchen.mapper.DishMapper;
 import liga.restaurant.BusinessException;
 import liga.restaurant.NotFoundException;
+import liga.restaurant.kitchen.entity.Dish;
+import liga.restaurant.kitchen.mapper.DishMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -42,7 +42,6 @@ public class DishService {
      *
      * @param dishId идентификатор блюда
      * @param amount кол-во блюд
-     *
      * @throws BusinessException если недостаточно блюда
      * @throws NotFoundException если блюдо не найдено
      */
@@ -64,6 +63,7 @@ public class DishService {
 
     /**
      * Удаляет блюдо из БД
+     *
      * @param dishId идентификатор блюда
      * @param amount кол-во блюд
      */
@@ -72,5 +72,6 @@ public class DishService {
         log.info("кол-во блюд изменено: dishId={}, amount={}",
                 dishId, amount);
     }
+
     private final DishMapper dishMapper;
 }

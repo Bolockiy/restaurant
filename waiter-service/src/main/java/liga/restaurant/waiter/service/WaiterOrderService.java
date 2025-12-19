@@ -1,20 +1,22 @@
 package liga.restaurant.waiter.service;
 
 import jakarta.transaction.Transactional;
+import liga.restaurant.NotFoundException;
 import liga.restaurant.dto.CreateWaiterOrderDto;
-import liga.restaurant.waiter.entity.WaiterAccount;
-import liga.restaurant.waiter.repository.WaiterAccountRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 import liga.restaurant.dto.KitchenOrderRequestDto;
+import liga.restaurant.dto.OrderStatus;
 import liga.restaurant.dto.WaiterOrderDto;
+import liga.restaurant.waiter.entity.WaiterAccount;
 import liga.restaurant.waiter.entity.WaiterOrder;
 import liga.restaurant.waiter.kafka.WaiterKafkaProducer;
+import liga.restaurant.waiter.repository.WaiterAccountRepository;
 import liga.restaurant.waiter.repository.WaiterOrderRepository;
-import liga.restaurant.NotFoundException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import java.time.OffsetDateTime;
 
 @Service
@@ -39,7 +41,7 @@ public class WaiterOrderService {
 
         WaiterOrder order = new WaiterOrder();
         order.setTableNo(dto.getTableNo());
-        order.setStatus("COOKING");
+        order.setStatus(OrderStatus.COOKING);
         order.setCreateDttm(OffsetDateTime.now());
         order.setWaiter(waiter);
         WaiterOrder savedOrder = repo.save(order);
@@ -58,6 +60,7 @@ public class WaiterOrderService {
 
         return savedOrder;
     }
+
     /**
      * Возвращает список заказов официанта с пагинацией.
      *
@@ -75,6 +78,7 @@ public class WaiterOrderService {
                         o.getCreateDttm()
                 ));
     }
+
     /**
      * Получает заказ официанта по идентификатору.
      *
@@ -99,6 +103,7 @@ public class WaiterOrderService {
                     return new NotFoundException("Заказ не найден id " + id);
                 });
     }
+
     /**
      * Удаляет заказ официанта по идентификатору.
      *
@@ -108,14 +113,15 @@ public class WaiterOrderService {
         log.info("Удаление заказа: id={}", id);
         repo.deleteById(id);
     }
+
     /**
      * Обновляет статус заказа официанта.
      * Используется при получении статусов из kitchen-сервиса.
      *
      * @param waiterOrderNo идентификатор заказа официанта
-     * @param status новый статус заказа
+     * @param status        новый статус заказа
      */
-    public void updateOrderStatus(Long waiterOrderNo, String status) {
+    public void updateOrderStatus(Long waiterOrderNo, OrderStatus status) {
         log.info("Обновление статуса заказа: id={}, newStatus={}", waiterOrderNo, status);
         WaiterOrder order = repo.findById(waiterOrderNo)
                 .orElseThrow(() -> {
@@ -123,7 +129,7 @@ public class WaiterOrderService {
                     return new NotFoundException("Заказ не найден: " + waiterOrderNo);
                 });
 
-        if (status.equals(order.getStatus())) {
+        if (order.getStatus().equals(status)) {
             log.debug("Статус заказа не изменился: id={}, status={}", waiterOrderNo, status);
             return;
         }
@@ -132,6 +138,7 @@ public class WaiterOrderService {
         repo.save(order);
         log.info("Статус заказа обновлён: id={}, newStatus={}", waiterOrderNo, status);
     }
+
     private final WaiterOrderRepository repo;
     private final WaiterKafkaProducer kafkaProducer;
     private final WaiterAccountRepository waiterAccountRepository;
