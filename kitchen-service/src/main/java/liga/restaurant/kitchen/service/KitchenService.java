@@ -112,7 +112,7 @@ public class KitchenService {
      * @throws NotFoundException если заказ не найден
      */
     public KitchenOrder getById(Long id) {
-        log.info("Fetching kitchen order by id={}", id);
+        log.info("Поиск заказа кухни id={}", id);
 
         KitchenOrder order = kitchenOrderMapper.findById(id);
         if (order == null) {
