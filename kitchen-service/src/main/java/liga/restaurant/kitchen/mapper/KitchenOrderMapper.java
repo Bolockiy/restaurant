@@ -3,7 +3,6 @@ package liga.restaurant.kitchen.mapper;
 import liga.restaurant.kitchen.entity.KitchenOrder;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
 
 @Mapper

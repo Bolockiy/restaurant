@@ -2,7 +2,6 @@ package liga.restaurant.kitchen.mapper;
 
 import liga.restaurant.kitchen.entity.OrderToDish;
 import org.apache.ibatis.annotations.*;
-
 import java.util.List;
 
 @Mapper
