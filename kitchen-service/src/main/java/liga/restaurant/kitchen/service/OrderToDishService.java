@@ -8,7 +8,7 @@ import java.util.List;
 
 @Service
 public class OrderToDishService {
-
+    private final OrderToDishMapper mapper;
     public OrderToDishService(OrderToDishMapper mapper) {
         this.mapper = mapper;
     }
@@ -32,6 +32,4 @@ public class OrderToDishService {
     public void deleteByOrderId(Long kitchenOrderId) {
         mapper.deleteByOrderId(kitchenOrderId);
     }
-
-    private final OrderToDishMapper mapper;
 }

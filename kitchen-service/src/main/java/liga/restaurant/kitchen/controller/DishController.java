@@ -20,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DishController {
 
+    private final DishService dishService;
     @Operation(
             summary = "Получить блюдо по ID",
             description = "Возвращает одно блюдо по его идентификатору"
@@ -108,6 +109,4 @@ public class DishController {
     ) {
         dishService.delete(id);
     }
-
-    private final DishService dishService;
 }

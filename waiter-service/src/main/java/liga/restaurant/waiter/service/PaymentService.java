@@ -13,6 +13,8 @@ import java.util.List;
 @Slf4j
 public class PaymentService {
 
+    private final PaymentRepository repo;
+
     public Payment save(Payment payment) {
         Payment saved = repo.save(payment);
         log.debug("Payment saved: {}", saved);
@@ -49,5 +51,4 @@ public class PaymentService {
         log.info("Payment deleted: id={}", id);
     }
 
-    private final PaymentRepository repo;
 }

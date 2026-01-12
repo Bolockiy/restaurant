@@ -16,13 +16,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.time.OffsetDateTime;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class WaiterOrderService {
+
+    private final WaiterOrderRepository repo;
+    private final WaiterKafkaProducer kafkaProducer;
+    private final WaiterAccountRepository waiterAccountRepository;
+
     /**
      * Создаёт заказ официанта и отправляет его на кухню.
      *
@@ -139,7 +143,4 @@ public class WaiterOrderService {
         log.info("Статус заказа обновлён: id={}, newStatus={}", waiterOrderNo, status);
     }
 
-    private final WaiterOrderRepository repo;
-    private final WaiterKafkaProducer kafkaProducer;
-    private final WaiterAccountRepository waiterAccountRepository;
 }

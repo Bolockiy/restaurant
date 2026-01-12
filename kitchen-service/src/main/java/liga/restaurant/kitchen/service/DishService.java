@@ -12,13 +12,18 @@ import java.util.List;
 @Service
 @Slf4j
 public class DishService {
+    private final DishMapper dishMapper;
 
     public DishService(DishMapper dishMapper) {
         this.dishMapper = dishMapper;
     }
 
     public Dish getById(Long id) {
-        return dishMapper.findById(id);
+        Dish dish = dishMapper.findById(id);
+        if (dish == null) {
+            throw new NotFoundException("Dish not found: " + id);
+        }
+        return dish;
     }
 
     public List<Dish> getAll() {
@@ -31,10 +36,12 @@ public class DishService {
 
     public void update(Dish dish) {
         dishMapper.update(dish);
+        log.info("Dish updated: id={}", dish.getDishId());
     }
 
     public void delete(Long id) {
         dishMapper.delete(id);
+        log.info("Dish deleted: id={}", id);
     }
 
     /**
@@ -73,5 +80,5 @@ public class DishService {
                 dishId, amount);
     }
 
-    private final DishMapper dishMapper;
+
 }

@@ -22,6 +22,10 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class KitchenService {
+    private final KitchenOrderMapper kitchenOrderMapper;
+    private final OrderToDishService orderToDishService;
+    private final KitchenKafkaProducer kitchenKafkaProducer;
+    private final DishService dishService;
 
     /**
      * Обрабатывает заказ, поступивший от waiter-сервиса.
@@ -165,8 +169,4 @@ public class KitchenService {
         kitchenOrderMapper.delete(id);
     }
 
-    private final KitchenOrderMapper kitchenOrderMapper;
-    private final OrderToDishService orderToDishService;
-    private final KitchenKafkaProducer kitchenKafkaProducer;
-    private final DishService dishService;
 }

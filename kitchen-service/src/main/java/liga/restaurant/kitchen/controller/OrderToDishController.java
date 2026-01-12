@@ -17,7 +17,7 @@ import java.util.List;
 @Tag(name = "Order-To-Dish API", description = "Связь заказов кухни с блюдами")
 @RequiredArgsConstructor
 public class OrderToDishController {
-
+    private final OrderToDishService service;
     @Operation(
             summary = "Получить все блюда по заказу",
             description = "Возвращает список блюд, входящих в заказ кухни"
@@ -70,6 +70,4 @@ public class OrderToDishController {
                        @PathVariable Long dishId) {
         service.delete(orderId, dishId);
     }
-
-    private final OrderToDishService service;
 }

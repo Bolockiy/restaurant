@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class WaiterAccountService {
 
+    private final WaiterAccountRepository repo;
+
     public WaiterAccount save(WaiterAccount dto) {
         log.info("Создание нового аккаунта: name={}, sex={}, employmentDate={}", dto.getName(), dto.getSex(), dto.getEmploymentDate());
         return repo.save(dto);
@@ -72,5 +74,4 @@ public class WaiterAccountService {
         log.info("Аккаунт удалён: id={}", id);
     }
 
-    private final WaiterAccountRepository repo;
 }

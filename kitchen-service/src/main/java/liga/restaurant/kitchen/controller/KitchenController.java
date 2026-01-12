@@ -19,7 +19,7 @@ import java.util.List;
 @Tag(name = "Kitchen API", description = "Работа с заказами кухни")
 @RequiredArgsConstructor
 public class KitchenController {
-
+    private final KitchenService kitchenService;
     @Operation(
             summary = "Получить заказ кухни по ID",
             description = "Возвращает один заказ кухни по его идентификатору"
@@ -125,7 +125,6 @@ public class KitchenController {
         kitchenService.delete(id);
     }
 
-    private final KitchenService kitchenService;
 }
 
 
