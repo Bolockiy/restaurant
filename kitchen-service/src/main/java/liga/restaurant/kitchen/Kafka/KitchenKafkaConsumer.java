@@ -26,12 +26,19 @@ public class KitchenKafkaConsumer {
             groupId = "${app.kafka.groups.kitchen}"
     )
     public void consume(KitchenOrderRequestDto dto) {
-        log.info("Received order from waiter: orderNo={} with {} dishes",
+        log.info(
+                "Получен заказ от официанта: orderNo={}, количество блюд={}",
                 dto.getWaiterOrderNo(),
-                dto.getDishes() != null ? dto.getDishes().size() : 0);
-        if (kitchenService.processOrderFromWaiter(dto))
-            kitchenKafkaProducer.sendStatusToWaiter(new OrderStatusDto(dto.getWaiterOrderNo(), OrderStatus.COOKING));
-        else
-            kitchenKafkaProducer.sendStatusToWaiter(new OrderStatusDto(dto.getWaiterOrderNo(), OrderStatus.FAILED));
+                dto.getDishes() != null ? dto.getDishes().size() : 0
+        );
+        if (kitchenService.processOrderFromWaiter(dto)) {
+            kitchenKafkaProducer.sendStatusToWaiter(
+                    new OrderStatusDto(dto.getWaiterOrderNo(), OrderStatus.COOKING)
+            );
+        } else {
+            kitchenKafkaProducer.sendStatusToWaiter(
+                    new OrderStatusDto(dto.getWaiterOrderNo(), OrderStatus.FAILED)
+            );
+        }
     }
 }

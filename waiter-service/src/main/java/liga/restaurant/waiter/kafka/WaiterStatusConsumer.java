@@ -24,7 +24,11 @@ public class WaiterStatusConsumer {
             groupId = "${app.kafka.groups.kitchen}"
     )
     public void consumeStatus(OrderStatusDto dto) {
-        log.info("Received order status: orderNo={} status={}", dto.getWaiterOrderNo(), dto.getStatus().toString());
+        log.info(
+                "Получен статус заказа: orderNo={}, status={}",
+                dto.getWaiterOrderNo(),
+                dto.getStatus()
+        );
         waiterOrderService.updateOrderStatus(dto.getWaiterOrderNo(), dto.getStatus());
     }
 }

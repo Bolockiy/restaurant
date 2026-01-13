@@ -21,7 +21,7 @@ public class WaiterKafkaProducer {
     private String topic;
 
     public void sendOrderToKitchen(KitchenOrderRequestDto dto) {
-        log.info("Sending order to kitchen: {}", dto);
+        log.info("Отправка заказа на кухню: {}", dto);
         kafkaTemplate.send(topic, dto);
     }
 }

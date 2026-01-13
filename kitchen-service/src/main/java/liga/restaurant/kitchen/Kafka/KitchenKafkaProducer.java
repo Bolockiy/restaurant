@@ -22,7 +22,11 @@ public class KitchenKafkaProducer {
     private String topic;
 
     public void sendStatusToWaiter(OrderStatusDto dto) {
-        log.info("Sending status to waiter: orderNo={} -> status={}", dto.getWaiterOrderNo(), dto.getStatus());
+        log.info(
+                "Отправка статуса официанту: orderNo={} → status={}",
+                dto.getWaiterOrderNo(),
+                dto.getStatus()
+        );
         kafkaTemplate.send(topic, dto);
     }
 }
