@@ -16,38 +16,37 @@ public class OrderPositionService {
 
     public OrderPosition save(OrderPosition position) {
         OrderPosition saved = repo.save(position);
-        log.debug("Order position saved: {}", saved);
+        log.debug("Позиция заказа сохранена: {}", saved);
         return saved;
     }
 
     public List<OrderPosition> findAll() {
-        log.info("Fetching all order positions");
+        log.info("Получение всех позиций заказа");
         List<OrderPosition> positions = repo.findAll();
-        log.debug("Found {} order positions", positions.size());
+        log.debug("Найдено позиций заказа: {}", positions.size());
         return positions;
     }
 
     public OrderPosition findById(Long id) {
-        log.info("Fetching order position by id: {}", id);
+        log.info("Получение позиции заказа по id={}", id);
         return repo.findById(id)
                 .map(pos -> {
-                    log.debug("Found order position: {}", pos);
+                    log.debug("Позиция заказа найдена: {}", pos);
                     return pos;
                 })
                 .orElseGet(() -> {
-                    log.warn("Order position not found: id={}", id);
+                    log.warn("Позиция заказа не найдена: id={}", id);
                     return null;
                 });
     }
 
     public void delete(Long id) {
-        log.info("Deleting order position: id={}", id);
+        log.info("Удаление позиции заказа: id={}", id);
         if (!repo.existsById(id)) {
-            log.warn("Order position not found for deletion: id={}", id);
+            log.warn("Позиция заказа не найдена для удаления: id={}", id);
             return;
         }
         repo.deleteById(id);
-        log.info("Order position deleted: id={}", id);
+        log.info("Позиция заказа удалена: id={}", id);
     }
-
 }

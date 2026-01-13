@@ -15,37 +15,37 @@ public class MenuService {
 
     public Menu save(Menu menu) {
         Menu saved = repo.save(menu);
-        log.debug("Menu item saved: {}", saved);
+        log.debug("Пункт меню сохранён: {}", saved);
         return saved;
     }
 
     public List<Menu> findAll() {
-        log.info("Fetching all menu items");
+        log.info("Получение всех пунктов меню");
         List<Menu> menus = repo.findAll();
-        log.debug("Found {} menu items", menus.size());
+        log.debug("Найдено пунктов меню: {}", menus.size());
         return menus;
     }
 
     public Menu findById(Long id) {
-        log.info("Fetching menu item by id: {}", id);
+        log.info("Получение пункта меню по id={}", id);
         return repo.findById(id)
                 .map(menu -> {
-                    log.debug("Found menu item: {}", menu);
+                    log.debug("Пункт меню найден: {}", menu);
                     return menu;
                 })
                 .orElseGet(() -> {
-                    log.warn("Menu item not found: id={}", id);
+                    log.warn("Пункт меню не найден: id={}", id);
                     return null;
                 });
     }
 
     public void delete(Long id) {
-        log.info("Deleting menu item: id={}", id);
+        log.info("Удаление пункта меню: id={}", id);
         if (!repo.existsById(id)) {
-            log.warn("Menu item not found for deletion: id={}", id);
+            log.warn("Пункт меню не найден для удаления: id={}", id);
             return;
         }
         repo.deleteById(id);
-        log.info("Menu item deleted: id={}", id);
+        log.info("Пункт меню удалён: id={}", id);
     }
 }

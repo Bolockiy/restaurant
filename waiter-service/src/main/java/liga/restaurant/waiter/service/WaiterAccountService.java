@@ -45,21 +45,30 @@ public class WaiterAccountService {
     }
 
     public WaiterAccountDto findById(Long id) {
-        log.info("Fetching waiter account by id: {}", id);
-        return repo.findById(id).map(o -> new WaiterAccountDto(
-                o.getId(),
-                o.getName(),
-                o.getSex(),
-                o.getEmploymentDate()
-        )).orElseThrow(() -> new NotFoundException("Официант не найден id: " + id));
+        log.info("Получение аккаунта официанта по id={}", id);
+        return repo.findById(id)
+                .map(o -> new WaiterAccountDto(
+                        o.getId(),
+                        o.getName(),
+                        o.getSex(),
+                        o.getEmploymentDate()
+                ))
+                .orElseThrow(() ->
+                        new NotFoundException("Официант не найден id: " + id)
+                );
     }
 
     public WaiterAccount update(Long id, WaiterAccountDto dto) {
-        log.info("Updating waiter account: id={}", id);
-        WaiterAccount waiterAccount = repo.findById(id).orElseThrow(() -> new NotFoundException("Официант не найден id: " + id));
+        log.info("Обновление аккаунта официанта: id={}", id);
+        WaiterAccount waiterAccount = repo.findById(id)
+                .orElseThrow(() ->
+                        new NotFoundException("Официант не найден id: " + id)
+                );
+
         waiterAccount.setName(dto.getName());
         waiterAccount.setSex(dto.getSex());
         waiterAccount.setEmploymentDate(dto.getEmploymentDate());
+
         repo.save(waiterAccount);
         return waiterAccount;
     }

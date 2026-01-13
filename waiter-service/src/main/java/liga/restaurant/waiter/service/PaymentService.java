@@ -16,38 +16,37 @@ public class PaymentService {
 
     public Payment save(Payment payment) {
         Payment saved = repo.save(payment);
-        log.debug("Payment saved: {}", saved);
+        log.debug("Платёж сохранён: {}", saved);
         return saved;
     }
 
     public List<Payment> findAll() {
-        log.info("Fetching all payments");
+        log.info("Получение всех платежей");
         List<Payment> payments = repo.findAll();
-        log.debug("Found {} payments", payments.size());
+        log.debug("Найдено платежей: {}", payments.size());
         return payments;
     }
 
     public Payment findById(Long id) {
-        log.info("Fetching payment by id: {}", id);
+        log.info("Получение платежа по id={}", id);
         return repo.findById(id)
                 .map(payment -> {
-                    log.debug("Found payment: {}", payment);
+                    log.debug("Платёж найден: {}", payment);
                     return payment;
                 })
                 .orElseGet(() -> {
-                    log.warn("Payment not found: id={}", id);
+                    log.warn("Платёж не найден: id={}", id);
                     return null;
                 });
     }
 
     public void delete(Long id) {
-        log.info("Deleting payment: id={}", id);
+        log.info("Удаление платежа: id={}", id);
         if (!repo.existsById(id)) {
-            log.warn("Payment not found for deletion: id={}", id);
+            log.warn("Платёж не найден для удаления: id={}", id);
             return;
         }
         repo.deleteById(id);
-        log.info("Payment deleted: id={}", id);
+        log.info("Платёж удалён: id={}", id);
     }
-
 }

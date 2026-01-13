@@ -20,7 +20,7 @@ public class DishService {
     public Dish getById(Long id) {
         Dish dish = dishMapper.findById(id);
         if (dish == null) {
-            throw new NotFoundException("Dish not found: " + id);
+            throw new NotFoundException("Блюдо не найдено: " + id);
         }
         return dish;
     }
@@ -35,12 +35,12 @@ public class DishService {
 
     public void update(Dish dish) {
         dishMapper.update(dish);
-        log.info("Dish updated: id={}", dish.getDishId());
+        log.info("Блюдо обновлено: id={}", dish.getDishId());
     }
 
     public void delete(Long id) {
         dishMapper.delete(id);
-        log.info("Dish deleted: id={}", id);
+        log.info("Блюдо удалено: id={}", id);
     }
 
     /**
